@@ -433,6 +433,26 @@ def carrinho():
 
 @app.route('/remover_produto_carrinho/<int:produto_id>', methods=['POST'])
 def remover_produto_carrinho(produto_id):
+	carrinho = session.get('carrinho', {})
+	produto_id_str = str(produto_id)
+	if produto_id_str not in carrinho:
+		print("O produto nao esta no carrinho")
+		print(f"Id enviado no formulario: {produto_id}")
+		print(f"Os id disponiveis no carrinho {carrinho}")
+		return redirect(url_for('carrinho'))
+	if request.method == 'POST':
+		acao = request.form['acao']
+		if acao == 'remover':
+			del carrinho[str(produto_id_str)]
+			print(carrinho)
+		elif acao == 'diminuir':
+			if carrinho[str(produto_id_str)] > 1:
+				carrinho[str(produto_id_str)] -= 1
+			else:
+				del carrinho[str(produto_id_str)]
+		session['carrinho'] = carrinho
+		session.modified = True
+		return redirect(url_for('carrinho'))
 	return redirect(url_for('carrinho'))
 
 
