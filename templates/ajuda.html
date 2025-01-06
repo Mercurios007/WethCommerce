@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajuda - Loja de Produtos</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        h3 {
+            text-align: center;
+            color: #14CD37;
+            margin-top: 30px;
+            font-size: 1.8em;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .content {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #121212;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+        }
+        .section-title {
+            font-size: 1.4em;
+            color: #14CD37;
+            margin-top: 20px;
+            border-bottom: 2px solid #14CD37;
+            padding-bottom: 10px;
+            animation: slideInLeft 1s ease-in-out;
+        }
+        .help-text {
+            font-size: 1em;
+            color: #fff;
+            margin: 10px 0;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-in-out;
+        }
+        .back-btn {
+            background-color: #14CD37;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 20px 0;
+            display: block;
+            text-align: center;
+            width: 200px;
+            margin: 20px auto;
+            transition: background-color 0.3s ease, transform 0.2s;
+            animation: fadeInUp 1s ease-in-out;
+        }
+        .back-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Ajuda - Perfil e dados pessoais</h1>
+
+    <div class="content">
+        <p class="help-text">Bem-vindo à seção de ajuda da WethCommerce. Aqui você encontrará as instruções sobre como usar a sua loja de produtos.</p>
+        
+        <div class="section-title">1. Como Mudar o meu nome?</div>
+        <p class="help-text">Para alterar o teu nome de vendedor vá até configurações, escolha a opção alterar dados pessoais, selecione o nome e insira o novo nome. Por fim, clique em "Salvar Alterações".</p>
+
+        <div class="section-title">2. Como Mudar o meu email?</div>
+        <p class="help-text">Para alterar o teu email de vendedor vá até configurações, escolha a opção alterar dados pessoais, selecione o email e insira o novo email. Por fim, clique em "Salvar Alterações".</p>
+
+        <div class="section-title">3. Como Mudar o meu número de telefone?</div>
+        <p class="help-text">Para alterar o teu número de telefone vá até configurações, escolha a opção alterar dados pessoais, selecione o número de telefone e insira o novo número. Por fim, clique em "Salvar Alterações".</p>
+
+        <div class="section-title">4. Como Mudar o meu Endereço?</div>
+        <p class="help-text">Para alterar o teu endereço vá até configurações, escolha a opção alterar dados pessoais, selecione o endereço e insira o novo endereço. Por fim, clique em "Salvar Alterações".</p>
+    </div>
+    <p></p>
+    <h3>Ajuda - Loja de Produtos</h1>
+
+    <div class="content">
+        <p class="help-text">Bem-vindo à seção de ajuda da WethCommerce. Aqui você encontrará as instruções sobre como usar a sua loja de produtos.</p>
+        
+        <div class="section-title">1. Como Adicionar um Produto?</div>
+        <p class="help-text">Para adicionar um produto, clique no botão "Adicionar Produto" na página principal. Insira as informações necessárias como nome, preço, quantidade, descrição, escolha a categoria do seu produto e escolha uma imagem, e clique em "Salvar".</p>
+
+        <div class="section-title">2. Como Editar um Produto?</div>
+        <p class="help-text">Para editar um produto, clique no botão "Editar Produto". Escolha o produto desejado e faça as alterações necessárias escolhendo o que exatamente você quer editar no produto. Depois, clique em "Atualizar Produto" para atualizar as informações.</p>
+
+        <div class="section-title">3. Como Remover um Produto?</div>
+        <p class="help-text">Para remover um produto, clique no botão "Remover Produto". Escolha o produto que deseja excluir e confirme a remoção.</p>
+
+        <div class="section-title">4. Como Gerar um Link de Venda?</div>
+        <p class="help-text">Para gerar um link de venda, clique em "Gerar link de venda" e selecione o produto desejado. O link será gerado automaticamente para você compartilhar com seus clientes e em suas redes sociais.</p>
+
+        <div class="section-title">5. Como Acessar as Análises de Vendas?</div>
+        <p class="help-text">Para acessar as análises de vendas, clique no botão "Análises de Vendas" para ver o desempenho dos produtos da loja, em relação ao Marketing e aos clientes.</p>
+    </div>
+    
+    <a href="/loja_data" class="back-btn">Voltar para a Loja</a>
+
+</body>
+</html>

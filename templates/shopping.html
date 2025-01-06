@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página de shopping online com produtos incríveis e preços competitivos.">
+    <meta name="author" content="Seu Nome">
+    <title>Shopping</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        /* Estilo geral */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Barra de navegação */
+        .navbar {
+            background-color: #28a745;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cart-icon span {
+            margin-left: 5px;
+        }
+
+        /* Botão Carrinho */
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+        }
+
+        /* Container de produtos */
+        .container {
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #28a745;
+        }
+
+        h2 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos para categorias e produtos */
+        .category-products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .product {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            margin: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .product:hover {
+            transform: translateY(-10px);
+        }
+
+        .product img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .product img:hover {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .product-description {
+            font-size: 14px;
+            color: #777;
+            margin: 10px 0;
+        }
+
+        .product-price {
+            font-size: 16px;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-quantity {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .product-store {
+            margin-top: 10px;
+        }
+
+        .product-store a {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .product-store a:hover {
+            text-decoration: underline;
+        }
+
+        .add-to-cart-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Modal para o carrinho */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        .cart-modal.active {
+            display: block;
+        }
+
+        .cart-modal h3 {
+            margin-top: 0;
+            color: #28a745;
+        }
+
+        .cart-items {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .close-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background: #218838;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de Navegação -->
+    <div class="navbar">
+        <div>
+            <a href="#">Home</a>
+            <a href="#">Sobre</a>
+            <a href="#">Produtos</a>
+            <a href="#">Contato</a>
+        </div>
+        <button type="button" onclick="window.location.href='/carrinho';">🛒 Carrinho</button>
+    </div>
+
+    <!-- Container de Produtos -->
+    <div class="container">
+        <h1>Produtos Disponíveis</h1>
+
+        {% for categoria, produtos in produtos_por_categoria.items() %}
+            <h2>{{ categoria }}</h2>
+            <div class="category-products">
+                {% for produto in produtos %}
+                    <div class="product">
+                        <img 
+                            src="{{ url_for('static', filename='images/' + produto['imagem'] if produto['imagem'] else 'default.jpg') }}" 
+                            alt="Imagem do produto {{ produto['nome'] }}">
+                        <div class="product-info">
+                            <div class="product-name">{{ produto['nome'] }}</div>
+                            <div class="product-description">{{ produto['descricao'] }}</div>
+                            <div class="product-price">Preço:  {{ produto['preco'] }}</div>
+                            <div class="product-quantity">Quantidade em estoque: {{ produto['quantidade_estoque'] }}</div>
+                            <div class="product-store">
+                                <a href="{{ url_for('loja_data', loja_id=produto['loja_id']) }}">Loja: {{ produto['loja_nome'] }}</a>
+                            </div>
+                            <form 
+                                action="{{ url_for('adicionar_ao_carrinho', produto_id=produto['id']) }}" 
+                                method="POST" 
+                                autocomplete="off" 
+                                novalidate>
+                                <button type="submit" class="add-to-cart-btn">Adicionar ao Carrinho</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal do Carrinho -->
+    <div class="cart-modal" id="cartModal">
+        <h3>Itens no Carrinho</h3>
+        <div class="cart-items">
+            {% for item in carrinho %}
+            <div class="cart-item">
+                {{ item.nome }} - {{ item.quantidade }}x
+            </div>
+            {% endfor %}
+        </div>
+        <button class="close-btn" onclick="toggleCartModal()">Fechar</button>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2025 WethCommerce Shopping. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleCartModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

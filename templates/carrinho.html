@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seu Carrinho</title>
+  <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000000;
+      color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #14CD37;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .product-card {
+      background-color: #1a1a1a;
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .product-info {
+      flex: 1;
+      padding-right: 15px;
+    }
+
+    .product-info div {
+      margin-bottom: 8px;
+    }
+
+    .product-info strong {
+      font-size: 1.1em;
+      color: #14CD37;
+    }
+
+    .product-image img {
+      max-width: 90px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .product-actions button {
+      width: 120px;
+      margin-top: 10px;
+      border-radius: 5px;
+      padding: 8px 15px;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      background-color: #FF4C4C;
+      color: white;
+      border: none;
+    }
+
+    .remove-btn:hover {
+      background-color: #e63946;
+    }
+
+    .checkout-btn {
+      background-color: #14CD37;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+      border-radius: 5px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+      background-color: #128F27;
+    }
+
+    .total {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #14CD37;
+      text-align: center; /* Centraliza o total */
+      margin-top: 30px;
+    }
+
+    .empty-cart {
+      text-align: center;
+      font-size: 1.3em;
+      color: #CCCCCC;
+      margin-top: 50px;
+    }
+
+    .finalize-container {
+      margin-top: 30px;
+      text-align: center; /* Centraliza o botão de finalizar compra */
+    }
+
+    .finalize-container .checkout-btn {
+      margin-top: 20px;
+      width: 80%; /* Ajusta a largura para não ficar muito largo em telas grandes */
+    }
+
+    @media (max-width: 768px) {
+      .product-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .product-image {
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .total {
+        font-size: 1.2em;
+      }
+
+      .finalize-container {
+        flex-direction: column;
+        align-items: center; /* Centraliza o conteúdo da finalize-container */
+      }
+
+      .checkout-btn {
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Carrinho Weth</h1>
+    {% if produtos %}
+      {% for produto in produtos %}
+        <div class="product-card">
+          <div class="product-info">
+            <div><strong>{{ produto['nome'] }}</strong></div>
+            <div>Preço unitário: {{ produto['preco'] }} Kz</div>
+            <div>Quantidade: {{ produto['quantidade'] }}</div>
+            <div>Subtotal: {{ produto['subtotal'] }} Kz</div>
+            <form action="{{ url_for('remover_produto_carrinho', produto_id=produto['id']) }}" method="POST">
+              <button type="submit" class="remove-btn">Remover</button>
+            </form>
+          </div>
+          <div class="product-image">
+            <img src="{{ url_for('static', filename='images/' + produto['imagem'] if produto['imagem'] else 'default.jpg') }}" alt="Imagem do produto {{ produto['nome'] }}">
+          </div>
+        </div>
+      {% endfor %}
+      <div class="total">Total: {{ total }} Kz</div>
+      <div class="finalize-container">
+        <a href="{{ url_for('finalizar_compra') }}" class="checkout-btn">Finalizar Compra</a>
+      </div>
+    {% else %}
+      <p class="empty-cart">Seu carrinho está vazio.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

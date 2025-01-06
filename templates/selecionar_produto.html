@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Selecionar Produto</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <h1>Selecione um Produto para Editar</h1>
+    <form method="POST">
+        <label for="produto_id">Produto:</label>
+        <select name="produto_id" id="produto_id">
+            {% for produto in produtos %}
+            <option value="{{ produto[0] }}">ID: {{ produto[0] }} - Nome: {{ produto[1] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Editar Produto</button>
+    </form>
+</body>
+</html>
+

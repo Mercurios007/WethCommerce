@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Produto</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+        }
+        h1 {
+            text-align: center;
+            color: #14CD37;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        label {
+            font-size: 1.2em;
+            color: #CCCCCC;
+        }
+        input, select, textarea {
+            width: calc(100% - 50px);
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: #fff;
+            font-size: 1.1em;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-input-button {
+            width: calc(100% - 50px);
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            background-color: #006B3F;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        .file-input-button:hover {
+            background-color: #2E8B57;
+        }
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            flex: 1;
+            margin: 0 10px;
+        }
+        .form-group input[type="text"], .form-group textarea, .form-group select {
+            flex: 3;
+        }
+        button {
+            background-color: #14CD37;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #12b52f;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Atualizar Produto</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nome_produto">Selecione o Produto:</label>
+                <select name="nome_produto" id="nome_produto">
+                    {% for produto in produtos %}
+                    <option value="{{ produto[1] }}">{{ produto[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="editar_nome" name="editar_nome" value="1">
+                <label for="editar_nome">Editar Nome</label>
+                <input type="text" name="novo_nome" id="novo_nome">
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="editar_preco" name="editar_preco" value="1">
+                <label for="editar_preco">Editar Preço</label>
+                <input type="text" name="novo_preco" id="novo_preco">
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="editar_quantidade" name="editar_quantidade" value="1">
+                <label for="editar_quantidade">Editar Quantidade</label>
+                <input type="text" name="nova_quantidade" id="nova_quantidade">
+            </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="editar_descricao" name="editar_descricao" value="1">
+                <label for="editar_descricao">Editar Descrição</label>
+                <textarea name="nova_descricao" id="nova_descricao"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="editar_imagem" name="editar_categoria" value="1">
+                <label for="nova_categoria">Editar categoria:</label>
+                <select name="nova_categoria" id="nova_categoria">
+                    <option value="Moda e acessórios">Moda e acessórios</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Beleza e cuidados pessoais">Beleza e cuidados pessoais</option>
+                    <option value="Saúde e Fitness">Saúde e Fitness</option>
+                    <option value="Casa e decoração">Casa e decoração</option>
+                    <option value="Alimentos e Bebidas">Alimentos e Bebidas</option>
+                    <option value="Livros, papelaria e presentes">Livros, papelaria e presentes</option>
+                    <option value="Bebês e crianças">Bebês e crianças</option>
+                    <option value="Automotivo">Automotivo</option>
+                    <option value="Pets">Pets</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="editar_imagem" name="editar_imagem" value="1">
+                <label for="editar_imagem">Editar Imagem</label>
+                <label for="nova_imagem" class="file-input-button">Escolher Imagem</label>
+                <input type="file" name="nova_imagem" id="nova_imagem">
+            </div>
+
+            <button type="submit">Atualizar Produto</button>
+        </form>
+    </div>
+</body>
+</html>

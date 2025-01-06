@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deletar Produto</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* Fundo preto */
+            color: #FFFFFF; /* Texto branco */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: #1a1a1a; /* Fundo escuro para o container */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+        }
+        h1 {
+            text-align: center;
+            color: #14CD37; /* Verde vibrante */
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        label {
+            font-size: 1.2em;
+            color: #CCCCCC; /* Cor do texto das labels */
+            margin-bottom: 10px;
+            display: block;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            border-radius: 5px;
+            border: 1px solid #444; /* Bordas escuras */
+            background-color: #333; /* Fundo escuro para o select */
+            color: #fff; /* Texto branco */
+            font-size: 1.1em;
+        }
+        select:focus {
+            border-color: #14CD37; /* Bordas verdes no focus */
+            outline: none;
+        }
+        button {
+            background-color: #f44336; /* Vermelho para o botão */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #e53935; /* Vermelho mais forte no hover */
+        }
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        /* Animação de fade in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Deletar Produto</h1>
+        <form method="POST" action="/deletar_produto">
+            <div class="form-group">
+                <label for="nome">Selecione o Produto:</label>
+                <select id="nome" name="nome" required>
+                    {% for produto in produtos %}
+                    <option value="{{ produto[0] }}">{{ produto[0] }}</option> <!-- Produto nome -->
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit">Deletar Produto</button>
+        </form>
+    </div>
+</body>
+</html>

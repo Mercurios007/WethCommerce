@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Vendedor</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Barra de navegação -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <span class="vendedor-nome">{{ profile_data['name'] }}</span> <!-- Insira o caminho para o logo -->
+            </div>
+            <div class="navbar-right">
+                <a href="/loja_data" class="btn {% if active_page == 'loja' %}active{% endif %}">loja</a>
+                <a href="/perfil_data" class="btn {% if active_page == 'perfil' %}active{% endif %}">Perfil</a>
+                <a href="/mensagens" class="btn">Mensagens</a>
+                <a href="#" class="btn">Notificações <span class="notification-count"></span></a>
+                <a href="/configuracoes" class="btn">Configurações</a>
+                <a href="/ajuda" class="btn ajuda-btn">Ajuda</a>
+                <a href="/logout" class="btn logout-button">Sair</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Cabeçalho do perfil -->
+
+        <!-- Detalhes do vendedor (opcional) -->
+        <div class="profile-details" style="display:none;">
+            <h3>Informações de Contato</h3>
+            <div class="profile-item">
+                <label>Telefone 1:</label>
+                <span>{{ profile_data['phone_number_1'] }}</span>
+            </div>
+            <div class="profile-item">
+                <label>Telefone 2:</label>
+                <span>{{ profile_data['phone_number_2'] }}</span>
+            </div>
+            <div class="profile-item">
+                <label>Endereço:</label>
+                <span>{{ profile_data['address'] }}</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

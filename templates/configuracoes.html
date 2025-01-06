@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #111;
+            color: #14CD37;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .d-flex {
+            flex: 1;
+        }
+
+        .sidebar {
+            background-color: #222;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar a {
+            color: #14CD37;
+            text-decoration: none;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a.active, .sidebar a:hover {
+            background-color: #14CD37;
+            color: #111;
+        }
+
+        .content {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .config-item {
+            display: none;
+            animation: fadeIn 0.5s forwards;
+            background: #222;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .config-item.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-control, .form-select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px;
+                min-height: auto;
+            }
+
+            .content {
+                margin-top: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Configurações da Conta</h1>
+    </header>
+    <div class="d-flex">
+        <nav class="sidebar" aria-label="Menu de configurações">
+            <a href="#default_content" class="active" onclick="showForm('default_content', this)">Início</a>
+            <a href="#alterar_dados" onclick="showForm('alterar_dados', this)">Alterar Dados</a>
+            <a href="#alterar_senha" onclick="showForm('alterar_senha', this)">Alterar Senha</a>
+            <a href="#notificacoes" onclick="showForm('notificacoes', this)">Notificações</a>
+            <a href="#idioma" onclick="showForm('idioma', this)">Idioma</a>
+            <a href="#privacidade" onclick="showForm('privacidade', this)">Privacidade</a>
+            <a href="#vincular_redes" onclick="showForm('vincular_redes', this)">Redes Sociais</a>
+            <a href="#excluir_conta" onclick="showForm('excluir_conta', this)">Excluir Conta</a>
+        </nav>
+        <main class="content container">
+            <div id="default_content" class="config-item active">
+                <h2>Bem-vindo às Configurações</h2>
+                <p>Selecione uma opção no menu para começar a personalizar sua conta.</p>
+            </div>
+            <div id="alterar_dados" class="config-item">
+                <h3>Alterar Dados</h3>
+                <form>
+                    <label for="campo">Escolha o campo:</label>
+                    <select id="campo" name="campo" class="form-select">
+                        <option value="nome">Nome</option>
+                        <option value="email">Email</option>
+                        <option value="telefone1">Telefone 1</option>
+                        <option value="telefone2">Telefone 2</option>
+                        <option value="endereco">Endereço</option>
+                    </select>
+                    <label for="novo_valor">Novo valor:</label>
+                    <input type="text" id="novo_valor" class="form-control">
+                    <button type="submit" class="btn btn-success mt-3">Salvar</button>
+                </form>
+            </div>
+            <!-- Outras seções seguem o mesmo padrão... -->
+            <!-- Alterar Senha -->
+            <div id="alterar_senha" class="config-item">
+                <h3>Alterar Senha</h3>
+                <form action="/alterar_senha" method="POST">
+                    <label for="senha_atual">Senha Atual:</label>
+                    <input type="password" id="senha_atual" name="senha_atual" class="form-control">
+                    <label for="nova_senha">Nova Senha:</label>
+                    <input type="password" id="nova_senha" name="nova_senha" class="form-control">
+                    <label for="confirmar_senha">Confirmar Senha:</label>
+                    <input type="password" id="confirmar_senha" name="confirmar_senha" class="form-control">
+                    <button type="submit" class="btn btn-success mt-3">Salvar</button>
+                </form>
+            </div>
+
+            <!-- Notificações -->
+            <div id="notificacoes" class="config-item">
+                <h3>Notificações</h3>
+                <form action="/alterar_notificacoes" method="POST">
+                    <label for="notificacoes_email">Receber notificações por e-mail:</label>
+                    <select id="notificacoes_email" name="notificacoes_email" class="form-select">
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+                    <button type="submit" class="btn btn-success mt-3">Salvar</button>
+                </form>
+            </div>
+
+            <!-- Preferências de Idioma -->
+            <div id="idioma" class="config-item">
+                <h3>Idioma</h3>
+                <form action="/alterar_idioma" method="POST">
+                    <label for="idioma">Selecione o idioma:</label>
+                    <select id="idioma" name="idioma" class="form-select">
+                        <option value="pt">Português</option>
+                        <option value="en">Inglês</option>
+                        <option value="es">Espanhol</option>
+                    </select>
+                    <button type="submit" class="btn btn-success mt-3">Salvar</button>
+                </form>
+            </div>
+
+            <!-- Privacidade -->
+            <div id="privacidade" class="config-item">
+                <h3>Privacidade</h3>
+                <form action="/alterar_privacidade" method="POST">
+                    <label for="config_privacidade">Configurações de privacidade:</label>
+                    <select id="config_privacidade" name="config_privacidade" class="form-select">
+                        <option value="publico">Público</option>
+                        <option value="privado">Privado</option>
+                    </select>
+                    <button type="submit" class="btn btn-success mt-3">Salvar</button>
+                </form>
+            </div>
+
+            <!-- Vincular Redes Sociais -->
+            <div id="vincular_redes" class="config-item">
+                <h3>Vincular Redes Sociais</h3>
+                <form action="/vincular_redes" method="POST">
+                    <label for="facebook">Facebook:</label>
+                    <input type="text" id="facebook" name="facebook" class="form-control" placeholder="URL do seu Facebook">
+                    <label for="instagram">Instagram:</label>
+                    <input type="text" id="instagram" name="instagram" class="form-control" placeholder="URL do seu Instagram">
+                    <label for="twitter">Twitter:</label>
+                    <input type="text" id="twitter" name="twitter" class="form-control" placeholder="URL do seu Twitter">
+                    <button type="submit" class="btn btn-success mt-3">Salvar</button>
+                </form>
+            </div>
+
+            <!-- Excluir Conta -->
+            <div id="excluir_conta" class="config-item">
+                <h3>Excluir Conta</h3>
+                <form action="/excluir_conta" method="POST">
+                    <label for="senha_atual_excluir">Senha Atual:</label>
+                    <input type="password" id="senha_atual_excluir" name="senha_atual" class="form-control">
+                    <button type="submit" class="btn btn-danger mt-3">Excluir Conta</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script>
+        function showForm(id, link) {
+            document.querySelectorAll('.config-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+        }
+    </script>
+</body>
+</html>

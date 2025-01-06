@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wethcommerce</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        /* Estilo geral */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #d3d3d3;
+            overflow-x: hidden;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: #222;
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            margin: 0;
+            color: #14CD37;
+            font-size: 2.5em;
+        }
+
+        .navbar {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar button {
+            background-color: transparent;
+            border: 2px solid #14CD37;
+            color: #14CD37;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .navbar button:hover {
+            background-color: #14CD37;
+            color: #14CD37;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #141414
+            color: #14CD37;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        .hero button {
+            background-color: #14CD37;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero button:hover {
+            background-color: #12b131;
+        }
+
+        /* Benefícios */
+        .benefits {
+            padding: 60px 10%;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .benefit-card {
+            flex: 1 1 calc(33.333% - 20px);
+            background-color: #222;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .benefit-card img {
+            width: 60px;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card h3 {
+            color: #14CD37;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .benefit-card p {
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        /* Seção de FAQ */
+        .faq {
+            background-color: #1e1e1e;
+            padding: 60px 10%;
+        }
+
+        .faq h2 {
+            color: #14CD37;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-item h3 {
+            cursor: pointer;
+            padding: 15px;
+            background-color: #222;
+            color: #14CD37;
+            margin: 0;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-item h3:hover {
+            background-color: #14CD37;
+            color: #fff;
+        }
+
+        .faq-item p {
+            display: none;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0 0;
+        }
+
+        .faq-item.active p {
+            display: block;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #222;
+            padding: 20px 10%;
+            text-align: center;
+            color: #d3d3d3;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #14CD37;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #12b131;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .benefit-card {
+                flex: 1 1 calc(100% - 20px);
+            }
+
+            .hero h2 {
+                font-size: 2.2em;
+            }
+
+            .hero p {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Wethcommerce</h1>
+    <div class="navbar">
+        <button onclick="window.location.href='/login'">Login</button>
+        <button onclick="window.location.href='/shopping'">shopping</button>
+        <button onclick="window.location.href='/contato'">Contato</button>
+        <button onclick="window.location.href='/suporte'">Suporte</button>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<div class="hero">
+    <h2>Bem-vindo ao Wethcommerce</h2>
+    <p>A plataforma que conecta vendedores e compradores com segurança e praticidade.</p>
+    <button onclick="window.location.href='/cadastro'">Comece Agora</button>
+</div>
+
+<!-- Benefícios -->
+<div class="benefits">
+    <div class="benefit-card">
+        <h3>Segurança</h3>
+        <p>Transações seguras e suporte técnico para garantir uma experiência confiável.</p>
+    </div>
+    <div class="benefit-card">
+        <h3>Praticidade</h3>
+        <p>Interface amigável e intuitiva para facilitar suas negociações.</p>
+    </div>
+    <div class="benefit-card">
+        <h3>Alcance</h3>
+        <p>Aumente suas vendas e conecte-se com novos clientes em um só lugar.</p>
+    </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq">
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq-item">
+        <h3>Como me cadastro como vendedor?</h3>
+        <p>Acesse a página de cadastro e preencha o formulário com suas informações. Após isso, aguarde a confirmação do nosso time.</p>
+    </div>
+    <div class="faq-item">
+        <h3>Quais os métodos de pagamento aceitos?</h3>
+        <p>Atualmente aceitamos transferências bancárias, cartões de crédito e pagamentos via Pix.</p>
+    </div>
+    <div class="faq-item">
+        <h3>O suporte técnico é gratuito?</h3>
+        <p>Sim! Nosso suporte técnico está disponível para todos os usuários sem custo adicional.</p>
+    </div>
+</div>
+
+<footer>
+    &copy; 2024 Wethcommerce. Todos os direitos reservados. 
+    <br>
+    <a href="/politica-privacidade">Política de Privacidade</a> | 
+    <a href="/termos-uso">Termos de Uso</a>
+</footer>
+
+<script>
+    // Interatividade do FAQ
+    document.querySelectorAll('.faq-item h3').forEach(item => {
+        item.addEventListener('click', () => {
+            const parent = item.parentElement;
+            parent.classList.toggle('active');
+        });
+    });
+</script>
+
+</body>
+</html>

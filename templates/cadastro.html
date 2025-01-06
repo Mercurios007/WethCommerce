@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Vendedor</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* Fundo preto */
+            color: #FFFFFF; /* Cor do texto em branco */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background-color: #1a1a1a; /* Fundo escuro para o container */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease;
+        }
+        h1 {
+            text-align: center;
+            color: #14CD37; /* Verde vibrante para o título */
+        }
+        label {
+            font-size: 1.1em;
+            color: #CCCCCC; /* Cor do texto dos labels em cinza claro */
+            margin-bottom: 5px;
+            display: block;
+        }
+        input[type="text"], input[type="email"], input[type="password"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #444; /* Bordas em cinza escuro */
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #333; /* Fundo escuro para inputs */
+            color: #fff; /* Texto branco dentro dos inputs */
+            transition: all 0.3s ease; /* Animação suave */
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
+            border-color: #14CD37; /* Borda verde ao focar */
+            background-color: #444; /* Fundo mais claro */
+            outline: none;
+        }
+        button {
+            background-color: #14CD37; /* Verde vibrante */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+        }
+        button:hover {
+            background-color: #45a049; /* Verde mais escuro no hover */
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        /* Animação para o formulário */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Vendedor</h1>
+        <form method="POST" action="/cadastro" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Nome</label>
+                <input type="text" id="name" name="name" required placeholder="Digite o nome do vendedor">
+            </div>
+
+            <div class="form-group">
+                <label for="bi_passaporte">Número do BI/Passaporte</label>
+                <input type="text" id="bi_passaporte" name="bi_passaporte" required placeholder="Digite o número do BI ou Passaporte">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Digite o email do vendedor">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required placeholder="Digite a senha">
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number_1">Telefone 1</label>
+                <input type="text" id="phone_number_1" name="phone_number_1" required placeholder="Digite o primeiro telefone">
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number_2">Telefone 2</label>
+                <input type="text" id="phone_number_2" name="phone_number_2" placeholder="Digite o segundo telefone (opcional)">
+            </div>
+
+            <div class="form-group">
+                <label for="store_name">Nome da loja</label>
+                <input type="text" id="store_name" name="store_name" placeholder="Digite o nome da loja">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Endereço</label>
+                <textarea id="address" name="address" rows="4" placeholder="Digite o endereço do vendedor"></textarea>
+            </div>
+
+            <!-- Novo campo para o upload da imagem da loja -->
+            <div class="form-group">
+                <label for="store_logo">Logo da loja (opcional)</label>
+                <input type="file" name="store_logo" id="store_logo">
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Cadastrar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phone1 = document.getElementById('phone_number_1').value;
+            const biPassaporte = document.getElementById('bi_passaporte').value;
+
+            if (!name || !email || !password || !phone1 || !biPassaporte) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

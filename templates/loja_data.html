@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Produtos</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000000;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #1a1a1a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        header h1 {
+            margin: 10px 0;
+            font-size: 2.8em;
+            color: #14CD37;
+        }
+
+        .navbar-container {
+            background-color: #333;
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-right {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .navbar-right a {
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .navbar-right a.active {
+            background-color: #14CD37;
+        }
+
+        .navbar-right a:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .action-buttons button {
+            background-color: #14CD37;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .action-buttons button i {
+            margin-right: 8px;
+        }
+
+        .action-buttons button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .produtos-container {
+            flex: 1;
+            margin-top: 20px;
+            padding: 0 15px;
+            overflow: auto;
+        }
+
+        .tabela-scroll {
+            max-height: 400px; /* Aproximadamente 8-9 linhas */
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .tabela-scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .tabela-scroll::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 5px;
+        }
+
+        .tabela-scroll::-webkit-scrollbar-track {
+            background: #222;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: left;
+            border: 1px solid #444;
+            font-size: 1.1rem;
+        }
+
+        th {
+            background-color: #14CD37;
+            color: #fff;
+            font-weight: 700;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        tr:hover {
+            background-color: #444;
+        }
+
+        td.status-concluida {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        td.status-pendente {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #1a1a1a;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #14CD37;
+            text-decoration: none;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        @media screen and (max-width: 768px) {
+            th, td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .action-buttons button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='images/' + (logo_filename if logo_filename else 'default_logo.png')) }}" alt="Logo da Loja">
+        <h1>{{ loja }}</h1>
+    </header>
+
+    <!-- Barra de navegação -->
+    <div class="navbar-container">
+        <div class="navbar-right">
+            <a href="/loja_data" class="{% if active_page == 'loja' %}active{% endif %}">Loja</a>
+            <a href="/perfil_data" class="{% if active_page == 'perfil' %}active{% endif %}">Perfil</a>
+            <a href="#" class="{% if active_page == 'notificacoes' %}active{% endif %}">Notificações</a>
+            <a href="/configuracoes" class="{% if active_page == 'configuracoes' %}active{% endif %}">Configurações</a>
+            <a href="/ajuda" class="ajuda-btn">Ajuda</a>
+            <a href="/logout" class="logout-button">Sair</a>
+        </div>
+    </div>
+
+    <!-- Botões de ação -->
+    <div class="action-buttons">
+        <button type="button" onclick="window.location.href='/adicionar_produto';"><i class="fas fa-plus"></i>Adicionar Produto</button>
+        <button type="button" onclick="window.location.href='/deletar_produto';"><i class="fas fa-trash"></i>Remover Produto</button>
+        <button type="button" onclick="window.location.href='/editar_produto';"><i class="fas fa-edit"></i>Editar Produto</button>
+        <button type="button" onclick="window.location.href='/link_para_produto';"><i class="fas fa-link"></i>Gerar Link de Venda</button>
+        <button type="button" onclick="window.location.href='/link_de_afiliado';"><i class="fas fa-handshake"></i>Link de Afiliado</button>
+        <button type="button" onclick="window.location.href='/analise_de_vendas';"><i class="fas fa-chart-line"></i>Análises de Vendas</button>
+    </div>
+    <p>
+    <p>
+    <p>
+    <h2>Produtos</h2>
+
+    <!-- Container com scroll vertical para a tabela de produtos -->
+    <div class="produtos-container">
+        <div class="tabela-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Quantidade</th>
+                        <th>Data de Criação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ produto[1] }}</td>
+                        <td>{{ produto[2] }}</td>
+                        <td>{{ produto[3] }}</td>
+                        <td>{{ produto[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; {{ ano }} {{ loja }}. Todos os direitos reservados. <a href="/politica_privacidade">Política de Privacidade</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Novo Produto</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* Fundo preto */
+            color: #FFFFFF; /* Texto branco */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            background-color: #1a1a1a; /* Fundo escuro para o container */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+        }
+        h1 {
+            text-align: center;
+            color: #14CD37; /* Verde vibrante */
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        label {
+            font-size: 1.2em;
+            color: #CCCCCC; /* Cor do texto das labels */
+            flex: 1;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            border-radius: 5px;
+            border: 1px solid #444; /* Bordas escuras */
+            background-color: #333; /* Fundo escuro para inputs */
+            color: #fff; /* Texto branco */
+            font-size: 1.1em;
+            flex: 3;
+        }
+        input[type="checkbox"] {
+            width: auto; /* Redefinir tamanho para checkbox */
+            margin-right: 10px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #14CD37; /* Verde vibrante para o botão */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #12b52f; /* Verde mais escuro no hover */
+        }
+
+        /* Estilização para o botão de selecionar imagem */
+        .form-group input[type="file"] {
+            display: none;
+        }
+        .form-group label[for="imagem"] {
+            display: inline-block;
+            padding: 8px 15px; /* Tamanho menor para o botão de imagem */
+            background-color: #006B3F; /* Cor diferente para o botão de imagem */
+            color: white;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            width: auto;
+            text-align: center;
+            margin-right: 10px; /* Espaço à direita do botão de imagem */
+        }
+        .form-group label[for="imagem"]:hover {
+            background-color: #2E8B57; /* Cor diferente no hover */
+            transform: scale(1.05);
+        }
+
+        /* Animação de fade in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animação para as caixas de seleção ao passar o mouse */
+        .form-group input[type="checkbox"]:hover {
+            transform: scale(1.2);
+            transition: transform 0.2s ease;
+        }
+        .form-group input[type="checkbox"]:checked + label {
+            color: #14CD37; /* Cor verde vibrante quando selecionado */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Adicionar Novo Produto</h1>
+        <form action="{{ url_for('adicionar_produto') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nome">Nome do Produto:</label>
+                <input type="text" id="nome" name="nome" class="form-control" placeholder="Digite o nome do produto" required>
+            </div>
+            <div class="form-group">
+                <label for="preco">Preço (Kz):</label>
+                <input type="text" id="preco" name="preco" class="form-control" placeholder="Digite o preço do produto" required>
+            </div>
+            <div class="form-group">
+                <label for="quantidade_estoque">Quantidade em Estoque:</label>
+                <input type="number" id="quantidade_estoque" name="quantidade_estoque" class="form-control" placeholder="Digite a quantidade disponível" required>
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição do Produto:</label>
+                <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Digite a descrição do produto" required>
+            </div>
+
+            <!-- Novo campo para selecionar a categoria -->
+            <div class="form-group">
+                <label for="categoria">Categoria:</label>
+                <select id="categoria" name="categoria" class="form-control" required>
+                    <option value="Moda e acessorios">Moda e Acessórios</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Beleza e cuidados pessoais">Beleza e Cuidados Pessoais</option>
+                    <option value="Saude e Fitness">Saúde e Fitness</option>
+                    <option value="Casa e decoracao">Casa e Decoração</option>
+                    <option value="Alimentos e Bebidas">Alimentos e Bebidas</option>
+                    <option value="Livros papelaria e presentes">Livros, Papelaria e Presentes</option>
+                    <option value="Bebes e criancas">Bebês e Crianças</option>
+                    <option value="Automotivo">Automotivo</option>
+                    <option value="Pets">Pets</option>
+                </select>
+            </div>
+
+            <!-- Estilização interativa para o botão de selecionar imagem -->
+            <div class="form-group">
+                <input type="file" id="imagem" name="imagem" class="form-control" required>
+                <label for="imagem">Selecione uma Imagem</label>
+            </div>
+
+            <button type="submit">Adicionar Produto</button>
+        </form>
+    </div>
+</body>
+</html>
