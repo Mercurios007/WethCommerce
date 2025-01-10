@@ -2,6 +2,7 @@ from flask import Flask, flash, render_template, request, redirect, session, jso
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 import time
+import paypalrestsdk
 import mysql.connector
 from mysql.connector import errorcode
 from mysql.connector import pooling
@@ -13,6 +14,18 @@ UPLOAD_FOLDER = 'static/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+# Configuração do PayPal
+app.config['AfM4pF6qRAsjI_irqFeb5oPqT12OIErII-w5NOYXpymz8KghV-jU57375PxmEoa8xzC8O-MHpL7Lcb3A'] = os.getenv('AfM4pF6qRAsjI_irqFeb5oPqT12OIErII-w5NOYXpymz8KghV-jU57375PxmEoa8xzC8O-MHpL7Lcb3A')
+app.config['ENQx0E7yHD26A99f8FvfkquYV-OX1KJO9JDGH6hRgzpgKv9evHsl6-BMcUWHc0M6ldh53LidTDw21nzy'] = os.getenv('ENQx0E7yHD26A99f8FvfkquYV-OX1KJO9JDGH6hRgzpgKv9evHsl6-BMcUWHc0M6ldh53LidTDw21nzy')
+
+import paypalrestsdk
+
+paypalrestsdk.configure({
+    "mode": "live",  # Altere para "sandbox" se estiver usando para testes
+    "client_id": "AfM4pF6qRAsjI_irqFeb5oPqT12OIErII-w5NOYXpymz8KghV-jU57375PxmEoa8xzC8O-MHpL7Lcb3A",
+    "client_secret": "ENQx0E7yHD26A99f8FvfkquYV-OX1KJO9JDGH6hRgzpgKv9evHsl6-BMcUWHc0M6ldh53LidTDw21nzy"  # Substitua com seu Client Secret
+})
 
 
 status = os.system("docker ps | grep Backend")
@@ -187,7 +200,7 @@ def loja_data():
 		loja_name = loja[0]
 		logo_filename = loja[1]
 		print(f"Logo filename: {logo_filename}")
-		return render_template('loja_data.html', produtos=produtos, loja=loja_name, logo_filename=logo_filename, active_page='loja')
+		return render_template('loja_data.html', produtos=produtos, loja=loja_name, logo_filename=logo_filename, active_page='loja', vendedor_id=vendedor_id)
 
 @app.route('/adicionar_produto', methods=['GET', 'POST'])
 def adicionar_produto():
@@ -395,7 +408,8 @@ def adicionar_ao_carrinho(produto_id):
 	session.modified = True
 	total_itens = sum(carrinho.values())
 	print(f"Produto {produto_id} adicionado ao carrinho. Carrinho atual: {session['carrinho']}")
-	return redirect(url_for('shopping'))
+	"""return redirect(url_for('shopping'))"""
+	return jsonify({'total_itens': total_itens})
 
 
 @app.route('/carrinho')
@@ -458,7 +472,74 @@ def remover_produto_carrinho(produto_id):
 
 @app.route('/finalizar_compra')
 def finalizar_compra():
-	return render_template('finalizar_compra.html')
+	if 'carrinho' in session and session['carrinho']:
+		carrinho_ids = session['carrinho']
+		conn = mysql.connector.connect(**db_config)
+		cursor = conn.cursor()
+		format_strings = ','.join(['%s'] * len(carrinho_ids))
+		cursor.execute(f"""
+			SELECT id, nome, preco, quantidade_estoque, descricao, imagem
+			FROM produtos
+			WHERE id IN ({format_strings})
+		""", tuple(carrinho_ids.keys()))
+		produtos_carrinho = cursor.fetchall()
+		cursor.close()
+		conn.close()
+		total = 0
+		for produto in produtos_carrinho:
+			quantidade = carrinho_ids.get(str(produto[0]), 0)
+			total += produto[2] * quantidade
+
+		# Criar o pagamento no PayPal
+		payment = paypalrestsdk.Payment({
+			"intent": "sale",
+			"payer": {
+				"payment_method": "paypal"
+			},
+			"transactions": [{
+				"amount": {
+					"total": str(total),  # Total do carrinho
+					"currency": "USD"
+               			},
+				"description": "Compra no site"
+			}],
+			"redirect_urls": {
+				"return_url": url_for('pagamento_aprovado', _external=True),
+				"cancel_url": url_for('pagamento_cancelado', _external=True)
+			}
+		})
+
+		if payment.create():
+			print(f"Pagamento criado {payment}")
+			for link in payment.links:
+				payment = paypalrestsdk.Payment.find(payment.id)
+				if link.rel == "approval_url":
+					return redirect(link.href)
+				"""else:
+					return f"Erro ao criar o pagamento no PayPal: {payment.error}", 500"""
+		else:
+			return redirect(url_for('carrinho'))
+
+
+@app.route('/pagamento_aprovado')
+def pagamento_aprovado():
+	payer_id = request.args.get('PayerID')
+	payment_id = request.args.get('paymentId')
+	# Localiza o pagamento
+	payment = paypalrestsdk.Payment.find(payment_id)
+    
+	# Executa o pagamento
+	if payment.execute({"payer_id": payer_id}):
+		session.pop('carrinho', None)
+		return "Pagamento aprovado com sucesso!"
+	else:
+		return "Erro ao capturar pagamento", 500
+
+
+
+@app.route('/pagamento_cancelado')
+def pagamento_cancelado():
+	return "O pagamento foi cancelado."
 
 
 
@@ -564,6 +645,44 @@ def excluir_conta():
 def ajuda():
 	return render_template('ajuda.html')
 
+@app.route('/ver_loja/<int:vendedor_id>')
+def ver_loja(vendedor_id):
+	try:
+		conn = mysql.connector.connect(**db_config)
+		cursor = conn.cursor(dictionary=True)
+		cursor.execute("""
+				SELECT l.id, l.nome, l.imagem_url, l.descricao AS descricao_loja
+				FROM lojas l
+				WHERE l.vendedor_id = %s
+		""", (vendedor_id, ))
+		loja = cursor.fetchone()
+		if not loja:
+			return "Loja não encontrada para o vendedor especificado.", 404
+		cursor.execute("""
+			SELECT p.id, p.nome, p.preco, p.quantidade_estoque, p.imagem, p.descricao, p.categoria
+			FROM produtos p
+			WHERE p.loja_id = %s
+		""", (loja['id'], ))
+		produtos = cursor.fetchall()
+		cursor.close()
+		conn.close()
+		return render_template('ver_loja.html', loja=loja, produtos=produtos)
+	except mysql.connector.Error as e:
+		print(f"Erro no banco de dados: {e}")
+		return "Erro interno no WethServer. Tente novamente mais tarde.", 500
+	except Exception as e:
+		print(f"Erro geral: {e}")
+		return ("Erro inesperado. Tenta novamente mais tarde.", 500)
+
+
+
+"""SET @count := 0;
+
+UPDATE vendedor 
+SET id = (@count := @count + 1);
+
+ALTER TABLE vendedor AUTO_INCREMENT = 1;
+"""
 
 if __name__ == '__main__':
     app.run(debug=True, port=5005)

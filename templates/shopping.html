@@ -66,6 +66,24 @@
             transform: scale(1.1);
         }
 
+        /* Efeito de clique no botão */
+        .add-to-cart-btn:active {
+            transform: scale(0.95);
+            animation: clickEffect 0.3s ease-out;
+        }
+
+        @keyframes clickEffect {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
         /* Container de produtos */
         .container {
             padding: 20px;
@@ -228,6 +246,7 @@
             width: 100%;
             bottom: 0;
         }
+
     </style>
 </head>
 <body>
@@ -239,7 +258,9 @@
             <a href="#">Produtos</a>
             <a href="#">Contato</a>
         </div>
-        <button type="button" onclick="window.location.href='/carrinho';">🛒 Carrinho</button>
+        <button type="button" onclick="window.location.href='/carrinho';" id="cartButton">
+            🛒 Carrinho
+        </button>
     </div>
 
     <!-- Container de Produtos -->
@@ -262,13 +283,9 @@
                             <div class="product-store">
                                 <a href="{{ url_for('loja_data', loja_id=produto['loja_id']) }}">Loja: {{ produto['loja_nome'] }}</a>
                             </div>
-                            <form 
-                                action="{{ url_for('adicionar_ao_carrinho', produto_id=produto['id']) }}" 
-                                method="POST" 
-                                autocomplete="off" 
-                                novalidate>
-                                <button type="submit" class="add-to-cart-btn">Adicionar ao Carrinho</button>
-                            </form>
+                            <button type="button" class="add-to-cart-btn" onclick="adicionarAoCarrinho({{ produto['id'] }})">
+                                Adicionar ao Carrinho
+                            </button>
                         </div>
                     </div>
                 {% endfor %}
@@ -295,9 +312,33 @@
     </footer>
 
     <script>
+        // Função para adicionar produto ao carrinho via AJAX
+        function adicionarAoCarrinho(produtoId) {
+            fetch('/adicionar_ao_carrinho/' + produtoId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ produto_id: produtoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Produto adicionado ao carrinho!');
+                atualizarCarrinho(data.carrinho);
+            });
+        }
+
+        // Função para atualizar carrinho na interface
+        function atualizarCarrinho(carrinho) {
+            // Atualizar o número de itens no carrinho ou exibir outra informação
+            const cartButton = document.getElementById('cartButton');
+            cartButton.textContent = '🛒 Carrinho';
+        }
+
+        // Função para abrir ou fechar o modal do carrinho
         function toggleCartModal() {
-            const modal = document.getElementById('cartModal');
-            modal.classList.toggle('active');
+            const cartModal = document.getElementById('cartModal');
+            cartModal.classList.toggle('active');
         }
     </script>
 </body>

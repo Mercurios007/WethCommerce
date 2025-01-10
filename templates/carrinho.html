@@ -184,11 +184,15 @@
 
         <div class="finalize-container">
             <a href="{{ url_for('finalizar_compra') }}" class="checkout-btn">Finalizar Compra</a>
-            <a href="{{ url_for('shopping') }}" class="back-btn">Voltar para a Loja</a>
         </div>
     {% else %}
         <p class="empty-cart">Seu carrinho está vazio.</p>
     {% endif %}
+
+    <!-- Exibindo o botão "Voltar para a Loja" sempre -->
+    <div class="finalize-container">
+        <a href="{{ url_for('shopping') }}" class="back-btn">Voltar para a Loja</a>
+    </div>
 </div>
 
 <!-- Modal -->
