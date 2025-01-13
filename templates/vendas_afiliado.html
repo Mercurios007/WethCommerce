@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas - WethCommerce</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #14CD37;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .sales-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .sales-table th, .sales-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sales-table th {
+            background-color: #14CD37;
+            color: white;
+        }
+
+        .sales-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .sales-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .sales-table .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sales-table .actions a {
+            text-decoration: none;
+            color: #14CD37;
+            font-weight: bold;
+        }
+
+        .sales-table .actions a:hover {
+            text-decoration: underline;
+        }
+
+        .action-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .action-links a {
+            color: #14CD37;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header>
+            <h1>Vendas Realizadas - Mawete Pascoal</h1>
+            <p>Aqui estão todas as vendas feitas através do seu link de afiliado.</p>
+        </header>
+
+        <!-- Tabela de Vendas -->
+        <table class="sales-table">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Loja</th>
+                    <th>Comissão Ganha</th>
+                    <th>Data da Venda</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Exemplo de Venda -->
+                <tr>
+                    <td>Samsung Galaxy S24 Ultra</td>
+                    <td>Loja 1</td>
+                    <td>5.000 Kwanza</td>
+                    <td>10 de janeiro de 2025</td>
+                    <td class="actions">
+                        <a href="#">Ver Detalhes</a>
+                        <a href="#">Cancelar Venda</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>iPhone 14 Pro</td>
+                    <td>Loja 2</td>
+                    <td>7.500 Kwanza</td>
+                    <td>8 de janeiro de 2025</td>
+                    <td class="actions">
+                        <a href="#">Ver Detalhes</a>
+                        <a href="#">Cancelar Venda</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Fones de Ouvido Bose</td>
+                    <td>Loja 3</td>
+                    <td>2.000 Kwanza</td>
+                    <td>6 de janeiro de 2025</td>
+                    <td class="actions">
+                        <a href="#">Ver Detalhes</a>
+                        <a href="#">Cancelar Venda</a>
+                    </td>
+                </tr>
+                <!-- Fim do Exemplo de Venda -->
+            </tbody>
+        </table>
+
+        <!-- Links de Ação -->
+        <div class="action-links">
+            <a href="#">Ver Mais Vendas</a>
+            <a href="#">Sair</a>
+        </div>
+    </div>
+
+</body>
+</html>

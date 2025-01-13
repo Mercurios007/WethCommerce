@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Afiliados Weth</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #14CD37;
+        }
+
+        .form-container label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #14CD37;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #0f9e2d;
+        }
+
+        .form-container .cadastro-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .form-container .cadastro-link a {
+            text-decoration: none;
+            color: #14CD37;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Login de Afiliado</h2>
+
+        <form action="/login_afiliado" method="POST">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <input type="submit" value="Entrar">
+
+            <div class="cadastro-link">
+                <p>Não tem uma conta? <a href="/cadastro_afiliado">Cadastre-se</a></p>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

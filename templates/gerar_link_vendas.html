@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Link de Vendas</title>
+    <style>
+        /* Reset de margens e paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .link-container {
+            text-align: center;
+        }
+
+        a {
+            color: #4CAF50;
+            font-size: 1.1rem;
+            text-decoration: none;
+            word-wrap: break-word;
+            display: block;
+            margin-top: 10px;
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .copy-button {
+            background-color: #008CBA;
+            border: none;
+            padding: 8px 15px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .copy-button:hover {
+            background-color: #007B9E;
+        }
+
+        /* Media query para tornar o layout responsivo */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            form {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            button {
+                font-size: 1rem;
+            }
+        }
+
+        /* Estilos para ícones de fontes (como o ícone de link) */
+        .fas {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selecione o Produto para Gerar o Link</h1>
+    <form action="/gerar_link_vendas" method="POST">
+        <label for="produto_id">Escolha um Produto:</label>
+        <select id="produto_id" name="produto_id">
+            {% for produto in produtos %}
+                <option value="{{ produto[0] }}">{{ produto[1] }} - R$ {{ produto[2] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit"><i class="fas fa-link"></i> Gerar Link de Venda</button>
+    </form>
+
+    {% if link %}
+        <div class="link-container">
+            <h2>Link gerado:</h2>
+            <a href="{{ link }}" target="_blank" id="link-gerado">{{ link }}</a>
+            <button class="copy-button" onclick="copiarLink()">Copiar Link</button>
+        </div>
+    {% endif %}
+
+    <script>
+        // Função para copiar o link para a área de transferência
+        function copiarLink() {
+            var link = document.getElementById('link-gerado');
+            var input = document.createElement('input');
+            input.value = link.href;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            alert("Link copiado para a área de transferência!");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Afiliados Weth</title>
+    <style>
+        /* Reset de margens e padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Corpo da página */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Navegação */
+        .navbar {
+            background-color: #14CD37;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo h1 {
+            color: white;
+            font-size: 24px;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin: 0 15px;
+        }
+
+        .navbar nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .navbar nav ul li a:hover {
+            color: #2e7d32;
+        }
+
+        /* Seção de afiliados */
+        .afiliados-section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .afiliados-section h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        /* Busca de lojas */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-container input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #14CD37;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color: #0f9e2d;
+        }
+
+        /* Cartões de lojas */
+        .lojas-list {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .loja-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .loja-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .loja-img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .loja-info h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .btn-afiliado {
+            display: inline-block;
+            background-color: #14CD37;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-afiliado:hover {
+            background-color: #0f9e2d;
+        }
+
+        /* Meus Pedidos */
+        .meus-pedidos-section {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .meus-pedidos-section h3 {
+            margin-bottom: 20px;
+        }
+
+        .pedido-status {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .status-pendente {
+            background-color: #ffcc00;
+        }
+
+        .status-aprovado {
+            background-color: #14CD37;
+            color: white;
+        }
+
+        .status-rejeitado {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 50px;
+        }
+    </style>
+    <script>
+        // Função para criptografar o nome do afiliado
+        function criptografarTexto(texto) {
+            let resultado = '';
+            for (let i = 0; i < texto.length; i++) {
+                resultado += texto.charCodeAt(i).toString(16);
+            }
+            return resultado;
+        }
+
+        // Função para simular os dados das lojas
+        function mostrarLojas() {
+            const lojas = [
+                { id: 1, nome: 'Loja Samsung', produto: 'Samsung Galaxy S24 Ultra', imagem: 'loja_samsung.jpg' },
+                { id: 2, nome: 'Loja Apple', produto: 'iPhone 15 Pro', imagem: 'loja_apple.jpg' },
+                { id: 3, nome: 'Loja Nike', produto: 'Tênis Nike Air Max', imagem: 'loja_nike.jpg' },
+            ];
+
+            let lojasHtml = '';
+            lojas.forEach(loja => {
+                lojasHtml += `
+                    <div class="loja-card">
+                        <img src="${loja.imagem}" alt="Foto da loja" class="loja-img">
+                        <div class="loja-info">
+                            <h3>${loja.nome}</h3>
+                            <p><strong>Produto:</strong> ${loja.produto}</p>
+                            <a href="/afiliacao/${criptografarTexto(loja.nome)}/${loja.id}" class="btn-afiliado">Afiliar-se</a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.querySelector('.lojas-list').innerHTML = lojasHtml;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            mostrarLojas();
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <h1>WethCommerce</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/afiliados">Afiliados</a></li>
+                    <li><a href="/lojas">Lojas</a></li>
+                    <li><a href="/produtos">Produtos</a></li>
+                    <li><a href="/contato">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="afiliados-section">
+            <h2>Encontre Lojas e Produtos para Afiliar-se</h2>
+            <p>Pesquise por lojas e produtos para começar a ganhar comissões como afiliado!</p>
+
+            <!-- Caixa de busca -->
+            <div class="search-container">
+                <input type="text" placeholder="Buscar lojas..." id="search-lojas">
+                <button onclick="filtrarLojas()">Pesquisar</button>
+            </div>
+
+            <!-- Lista de lojas -->
+            <div class="lojas-list"></div>
+        </section>
+
+        <!-- Meus Pedidos de Afiliação -->
+        <section class="meus-pedidos-section">
+            <h3>Meus Pedidos de Afiliação</h3>
+
+            <div class="pedido-status status-pendente">
+                <p><strong>Status:</strong> Pendente</p>
+                <p><strong>Loja:</strong> Loja Samsung</p>
+                <p><strong>Produto:</strong> Samsung Galaxy S24 Ultra</p>
+            </div>
+
+            <div class="pedido-status status-aprovado">
+                <p><strong>Status:</strong> Aprovado</p>
+                <p><strong>Loja:</strong> Loja Apple</p>
+                <p><strong>Produto:</strong> iPhone 15 Pro</p>
+            </div>
+
+            <div class="pedido-status status-rejeitado">
+                <p><strong>Status:</strong> Rejeitado</p>
+                <p><strong>Loja:</strong> Loja Nike</p>
+                <p><strong>Produto:</strong> Tênis Nike Air Max</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 WethCommerce - Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>

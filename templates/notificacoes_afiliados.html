@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações - WethCommerce</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #14CD37;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .notifications-list {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .notifications-list li {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .notifications-list li .title {
+            font-weight: bold;
+            color: #14CD37;
+        }
+
+        .notifications-list li .message {
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .notifications-list li .date {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .action-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .action-links a {
+            color: #14CD37;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header>
+            <h1>Notificações - Mawete Pascoal</h1>
+            <p>Aqui estão todas as suas notificações importantes.</p>
+        </header>
+
+        <!-- Lista de Notificações -->
+        <ul class="notifications-list">
+            <!-- Exemplo de Notificação -->
+            <li>
+                <div class="title">Novo Produto Disponível</div>
+                <div class="message">Um novo produto foi adicionado à sua lista de afiliados. Acesse o painel para mais detalhes.</div>
+                <div class="date">Data: 10 de janeiro de 2025</div>
+            </li>
+            <li>
+                <div class="title">Alteração nas Comissões</div>
+                <div class="message">A comissão do produto 'Samsung Galaxy S24 Ultra' foi atualizada. Confira no painel para mais detalhes.</div>
+                <div class="date">Data: 8 de janeiro de 2025</div>
+            </li>
+            <li>
+                <div class="title">Promoção Especial</div>
+                <div class="message">Estamos oferecendo uma promoção especial de bônus para afiliados! Verifique os detalhes e aproveite.</div>
+                <div class="date">Data: 5 de janeiro de 2025</div>
+            </li>
+            <!-- Fim do Exemplo de Notificação -->
+        </ul>
+
+        <!-- Links de Ação -->
+        <div class="action-links">
+            <a href="#">Ver Mais Notificações</a>
+            <a href="#">Sair</a>
+        </div>
+    </div>
+
+</body>
+</html>

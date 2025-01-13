@@ -8,16 +8,11 @@ import mysql.connector
 from mysql.connector import errorcode
 from mysql.connector import pooling
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from itsdangerous import URLSafeTimedSerializer
-import random
-import smtplib
 import os
 
 app = Flask(__name__)
-app.secret_key = 'Madara'
 UPLOAD_FOLDER = 'static/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -50,11 +45,7 @@ def allowed_file(filename):
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-
-email_de = "wethcommerce@gmail.com"
-senha = "ctwz khlo pdbu znvg"
-
-
+app.secret_key = 'Madara'
 db_config = {
 	'user': 'root',
 	'password': 'Mercurios',
@@ -120,170 +111,33 @@ def cadastro():
 				file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
 				file.save(file_path)
 				store_logo = file.filename
-		codigo_verificacao = str(random.randint(100000, 999999))
-		session['cadastrar_dados'] = {
-			'name': name,
-			'email': email,
-			'password': password,		
-			'phone_number_1': phone_number_1,
-			'phone_number_2': phone_number_2,
-			'address': address,
-			'status': status,
-			'store_name': store_name,
-			'bi_passaporte': bi_passaporte,
-			'store_logo': store_logo,
-			'codigo_verificacao': codigo_verificacao
-		}
-
-		token = serializer.dumps(email, salt='email-confirmation-salt')
-		session['token'] = token
-		corpo = """
-		<!DOCTYPE html>
-		<html lang="pt-br">
-		<head>
-			<meta charset="UTF-8">
-			<style>
-				body {{
-					font-family: Arial, sans-serif;
-					margin: 0;
-					padding: 0;
-					background-color: #f5f5f5;
-        			}}
-				.email-container {{
-					max-width: 600px;
-					margin: 20px auto;
-					background: white;
-					border: 1px solid #ddd;
-					border-radius: 8px;
-					padding: 20px;
-					box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-				}}
-				.header {{
-					text-align: center;
-					padding: 10px 0;
-					background-color: #4CAF50;
-					color: white;
-					border-radius: 8px 8px 0 0;
-				}}
-				.header h1 {{
-					margin: 0;
-					font-size: 24px;
-				}}
-				.body {{
-					padding: 20px;
-					text-align: center;
-					color: #333;
-				}}
-				.body p {{
-					font-size: 18px;
-					margin: 10px 0;
-				}}
-				.code {{
-					font-size: 24px;
-					font-weight: bold;
-					color: #4CAF50;
-					margin: 20px 0;
-				}}
-				.footer {{
-					text-align: center;
-					padding: 10px;
-					font-size: 12px;
-					color: #777;
-				}}
-			</style>
-		</head>
-		<body>
-			<div class="email-container">
-				<div class="header">
-					<h1>Confirmação de Identidade</h1>
-				</div>
-				<div class="body">
-					<p>Olá, {name}</p>
-						<p>Estamos enviando este e-mail para confirmar sua identidade.</p>
-						<p>O seu código de verificação é:</p>
-						<div class="code">{codigo_verificacao}</div>
-						<p>Por favor, insira este código no campo indicado para continuar.</p>
-				</div>
-				<div class="footer">
-					<p>Se você não solicitou esta verificação, ignore este e-mail.</p>
-					<p>&copy; 2025 WethCommerce. Todos os direitos reservados.</p>
-				</div>
-			</div>
-		</body>
-		</html>
-		""".format(name=name, codigo_verificacao=codigo_verificacao)
-		email_de = "wethcommerce@gmail.com"
-		senha = "ctwz khlo pdbu znvg"
-
-		mensagem = MIMEMultipart()
-		mensagem["From"] = email_de
-		mensagem["To"] = email
-		mensagem["Subject"] = "Solicitação de Confirmação de Identidade"
-		mensagem.attach(MIMEText(corpo, "html"))
-
-		try:
-			servidor = smtplib.SMTP("smtp.gmail.com", 587)
-			servidor.starttls()
-			servidor.login(email_de, senha)
-			servidor.sendmail(email_de, email, mensagem.as_string())
-			servidor.close()
-			flash('Um e-mail foi enviado para a verificação. Por favor, verifique seu e-mail.')
-			print('Um e-mail foi enviado para a verificação. Por favor, verifique seu e-mail.')
-			return render_template('verificar_codigo.html', token=token)
-		except Exception as e:
-			print(f"Falha ao enviar o e-mail: {e}")
-			flash(f"Falha ao enviar o e-mail: {e}")
-			return redirect(url_for('cadastro'))
+		conn = mysql.connector.connect(**db_config)
+		cursor = conn.cursor()
+		cursor.execute("""INSERT INTO vendedor (name, email, password, phone_number_1, phone_number_2, address, status, bi_passaporte) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""", (name, email, password, phone_number_1, phone_number_2, address, status, bi_passaporte))
+		conn.commit()
+		vendedor_id = cursor.lastrowid
+		if store_logo:
+			cursor.execute("""INSERT INTO lojas (vendedor_id, nome, imagem_url) VALUES (%s, %s, %s)""", (vendedor_id, store_name, store_logo))
+		else:
+			cursor.execute("""INSERT INTO lojas (vendedor_id, nome) VALUES (%s, %s)""", (vendedor_id, store_name))
+		conn.commit()
+		return render_template('home.html')
 	return render_template('cadastro.html')
-	
+	cursor.close()
+	conn.close()
         	
 
 @app.route('/verificar_codigo/<token>', methods=['GET', 'POST'])
 def verificar_codigo(token):
 	try:
-		email = serializer.loads(token, salt='email-confirmation-salt', max_age=120)
+		email = seriallizer.loads(token, salt='email-confirmation-salt', max_age=120)
 	except:
 		flash('O código de verificação expirou ou é inválido. Por favor, solicite um novo código.')
 		return redirect(url_for('cadastro'))
 	if request.method == 'POST':
-		if 'cadastrar_dados' in session:
-			codigo_inserido = request.form['verification_code']
-			cadastro_dados = session['cadastrar_dados']
-			if codigo_inserido == cadastro_dados['codigo_verificacao']:
-				name = cadastro_dados['name']
-				email = cadastro_dados['email']
-				password = cadastro_dados['password']
-				phone_number_1 = cadastro_dados['phone_number_1']
-				phone_number_2 = cadastro_dados['phone_number_2']
-				address = cadastro_dados['address']
-				status = cadastro_dados['status']
-				store_name = cadastro_dados['store_name']
-				bi_passaporte = cadastro_dados['bi_passaporte']
-				store_logo = cadastro_dados['store_logo']
-
-				conn = mysql.connector.connect(**db_config)
-				cursor = conn.cursor()
-				cursor.execute("""INSERT INTO vendedor (name, email, password, phone_number_1, phone_number_2, address, status, bi_passaporte) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""", (name, email, password, phone_number_1, phone_number_2, address, status, bi_passaporte))
-				conn.commit()
-				vendedor_id = cursor.lastrowid
-				if store_logo:
-					cursor.execute("""INSERT INTO lojas (vendedor_id, nome, imagem_url) VALUES (%s, %s, %s)""", (vendedor_id, store_name, store_logo))
-				else:
-					cursor.execute("""INSERT INTO lojas (vendedor_id, nome) VALUES (%s, %s)""", (vendedor_id, store_name))
-				conn.commit()
-				cursor.close()
-				conn.close()
-				session.pop('cadastrar_dados', None)
-				flash('Código verificado e cadastro realizado com sucesso!')
-				return redirect(url_for('login'))
-			else:
-				flash('Dados de cadastro não encontrados na sessão. Por favor, tente novamente.')
-				return redirect(url_for('verificar_codigo', token=token))
-		else:
-			flash('Dados de cadastro não encontrados na sessão. Por favor, tente novamente.')
-			print('Dados de cadastro não encontrados na sessão. Por favor, tente novamente.')
-			return redirect(url_for('home'))
-			
+		codigo_inserido = request.form['verification_code']
+		flash('codigo verificado com sucesso!')
+		return redirect(url_for('cadastro'))
 	return render_template('verificar_codigo.html')
 
 

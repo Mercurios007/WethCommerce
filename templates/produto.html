@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ produto.nome }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #14CD37;
+        }
+
+        header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        header p {
+            font-size: 1rem;
+            margin-top: 5px;
+            color: #ccc;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .produto-info, .loja-info, .outros-produtos {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .produto-info img, .loja-info img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .produto-info h2, .loja-info h3 {
+            font-size: 1.5rem;
+            margin-top: 15px;
+            color: #222;
+        }
+
+        .produto-info p, .loja-info p {
+            font-size: 1rem;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .preco {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #14CD37;
+            margin-top: 15px;
+        }
+
+        .carrinho-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #14CD37;
+            color: #fff;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .carrinho-btn:hover {
+            background-color: #12a32a;
+        }
+
+        .carrinho-btn svg {
+            margin-right: 10px;
+        }
+
+        .outros-produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .produto-relacionado {
+            background-color: #fff;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .produto-relacionado:hover {
+            transform: translateY(-5px);
+        }
+
+        .produto-relacionado img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .produto-relacionado h3 {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .produto-relacionado p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .produto-relacionado .preco {
+            color: #14CD37;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        footer {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            border-top: 5px solid #14CD37;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .produto-info h2, .loja-info h3 {
+                font-size: 1.4rem;
+            }
+
+            .preco {
+                font-size: 1.4rem;
+            }
+
+            .outros-produtos {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            .produto-info h2, .loja-info h3 {
+                font-size: 1.3rem;
+            }
+
+            .preco {
+                font-size: 1.2rem;
+            }
+
+            .produto-relacionado h3 {
+                font-size: 1rem;
+            }
+
+            .produto-relacionado p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="static/images/{{ produto.loja_imagem }}" alt="{{ produto.loja_name }}">
+        <h1>{{ produto.loja_name }}</h1>
+        <p>{{ produto.loja_descricao }}</p>
+    </header>
+
+    <div class="container">
+        <div class="produto-info">
+            <img src="static/images/{{ produto.imagem }}" alt="{{ produto.nome }}">
+            <h2>{{ produto.nome }}</h2>
+            <p>{{ produto.descricao }}</p>
+            <div class="preco">R$ {{ produto.preco }}</div>
+            <button class="carrinho-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18M3 3l2 18h14l2-18M7 13h10M7 17h10M7 9h10" /></svg>
+                Adicionar ao Carrinho
+            </button>
+        </div>
+
+        <div class="loja-info">
+            <h3>Informações da Loja</h3>
+            <p>{{ produto.loja_descricao }}</p>
+        </div>
+
+        <div class="outros-produtos">
+            <h2>Outros Produtos da Loja</h2>
+            {% for p in produtos %}
+                <div class="produto-relacionado">
+                    <img src="static/images/{{ p.imagem }}" alt="{{ p.nome }}">
+                    <h3>{{ p.nome }}</h3>
+                    <p>{{ p.descricao }}</p>
+                    <div class="preco">R$ {{ p.preco }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; {{ current_year }} {{ produto.loja_name }}. Todos os direitos reservados.</p>
+    </footer>
+
+</body>
+</html>
