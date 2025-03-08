@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 import time
 import hashlib
+import stripe
 import paypalrestsdk
 import mysql.connector
 from mysql.connector import errorcode
@@ -35,7 +36,7 @@ paypalrestsdk.configure({
     "client_secret": "ENQx0E7yHD26A99f8FvfkquYV-OX1KJO9JDGH6hRgzpgKv9evHsl6-BMcUWHc0M6ldh53LidTDw21nzy"  # Substitua com seu Client Secret
 })
 
-
+stripe.api_key="sk_test_51QTOxKG8y4lkVkcj0VSZbqB0XnXRf8n8KTVN2ejV8h89eFVLN2n6DpqBcQGsxwVmAIZIXr8r7IyXT8ixgrQQVrhB003sgHXSHV"
 serializer = URLSafeTimedSerializer(app.secret_key)
 DOMINIO = "http://127.0.0.1:5005"
 
@@ -57,9 +58,9 @@ senha = "ctwz khlo pdbu znvg"
 
 db_config = {
 	'user': 'root',
-	'password': 'Mercurios',
+	'password': 'Alquimia',
 	'host': '127.0.0.1',
-	'port': '3308',
+	'port': '3306',
 	'database': 'WethCommerce',
 }
 
@@ -407,8 +408,12 @@ def adicionar_produto():
 				produto_existente = cursor.fetchone()
 				if produto_existente:
 					return redirect(url_for('adicionar_produto', erro="Produto com esse nome já existe na loja."))
-				query = "INSERT INTO produtos (nome, preco, quantidade_estoque, vendedor_id, loja_id, descricao, imagem, categoria) VALUES (%s, %s, %s, %s, %s ,%s, %s, %s)"
-				cursor.execute(query, (nome, preco, quantidade_estoque, vendedor_id, loja_id, descricao, filename, categoria))
+				cursor.execute("SELECT id FROM categoria WHERE nome = %s", (categoria,))
+				categoria_id = cursor.fetchone()
+				if categoria_id:
+					categoria_id = categoria_id[0]
+				query = "INSERT INTO produtos (nome, preco, quantidade_estoque, vendedor_id, loja_id, descricao, imagem, categoria_id) VALUES (%s, %s, %s, %s, %s ,%s, %s, %s)"
+				cursor.execute(query, (nome, preco, quantidade_estoque, vendedor_id, loja_id, descricao, filename, categoria_id))
 				conn.commit()
 				return redirect(url_for('loja_data'))
 			finally:
@@ -451,14 +456,27 @@ def deletar_produto():
 
 @app.route('/editar_produto', methods=['GET', 'POST'])
 def editar_produto():
+	print("Entrou na rota /editar_produto")
 	if request.method == 'POST':
 		nome_produto = request.form['nome_produto']
-		vendedor_id = session['id']
+		vendedor_id = session.get('id')
+		print(f"Nome do produto recebido do formulário: {request.form.get('nome_produto')}")
+		print(f"Vendedor ID na sessão: {vendedor_id}")
+		if not vendedor_id:
+			print("Erro: ID do vendedor não encontrado na sessão")
+			return "Erro: ID do vendedor não encontrado", 400
 		conn = mysql.connector.connect(**db_config)
 		cursor  = conn.cursor()
 		cursor.execute("SELECT id FROM produtos WHERE nome = %s AND vendedor_id = %s", (nome_produto, vendedor_id))
 		result = cursor.fetchone()
 		if result:
+			print(f"Nome do produto enviado: {request.form.get('nome_produto')}")
+			print(f"Novo nome: {request.form.get('novo_nome')}")
+			print(f"Novo preço: {request.form.get('novo_preco')}")
+			print(f"Nova quantidade: {request.form.get('nova_quantidade')}")
+			print(f"Nova descrição: {request.form.get('nova_descricao')}")
+			print(f"Nova categoria: {request.form.get('nova_categoria')}")
+			print(f"Nova subcategoria: {request.form.get('nova_subcategoria')}")
 			id_produto = result[0]
 			if 'editar_nome' in request.form:
 				novo_nome = request.form['novo_nome']
@@ -473,8 +491,25 @@ def editar_produto():
 				nova_descricao = request.form['nova_descricao']
 				cursor.execute("UPDATE produtos SET descricao = %s WHERE id = %s AND vendedor_id = %s", (nova_descricao, id_produto, vendedor_id))
 			if 'editar_categoria' in request.form:
-				nova_categoria = request.form['nova_categoria']
-				cursor.execute("UPDATE produtos SET categoria = %s WHERE id = %s AND vendedor_id = %s", (nova_categoria, id_produto, vendedor_id))
+				categoria = request.form['nova_categoria']
+				cursor.execute("SELECT id FROM categoria WHERE nome = %s", (categoria,))
+				categoria_id = cursor.fetchone()
+				print(categoria_id)
+				if categoria_id:
+					cursor.execute("UPDATE produtos SET categoria_id = %s WHERE id = %s AND vendedor_id = %s", (categoria_id[0], id_produto, vendedor_id))
+					print(f"Linhas afetadas: {cursor.rowcount}")
+				else:
+					return ("Categoria ID é NULO")
+			if 'editar_subcategoria' in request.form:
+				nova_subcategoria = request.form['nova_subcategoria']
+				cursor.execute("SELECT id FROM subcategorias WHERE nome = %s", (nova_subcategoria,))
+				subcategoria_id = cursor.fetchone()
+				print("Subcategoria_id: {categoria_id}")
+				cursor.fetchall()
+				if subcategoria_id:
+					#print("Subcategoria_id: {categoria_id}")
+					cursor.execute("UPDATE produtos SET subcategoria_id = %s WHERE id = %s AND vendedor_id = %s", (subcategoria_id[0], id_produto, vendedor_id))
+					print(f"Linhas afetadas: {cursor.rowcount}")
 			if 'nova_imagem' in request.files:
 				imagem = request.files['nova_imagem']
 				print(f"Imagem carregado com sucesso: {imagem.filename}")
@@ -489,6 +524,7 @@ def editar_produto():
 		return redirect(url_for('loja_data'))
 	conn = mysql.connector.connect(**db_config)
 	cursor = conn.cursor()
+	print("Conectado ao banco de dados com sucesso")
 	vendedor_id = session['id']
 	query = "SELECT id, nome, preco, quantidade_estoque FROM produtos WHERE vendedor_id = %s"
 	cursor.execute(query, (vendedor_id,))
@@ -544,18 +580,30 @@ def analise_de_vendas():
 def loja(loja_id):
 	 return render_template('loja.html', loja_id=loja_id)
 
+
 @app.route('/shopping')
 def shopping():
 	conn =  mysql.connector.connect(**db_config)
 	cursor = conn.cursor(dictionary=True)
 	try:
-		cursor.execute("SELECT p.id, p.nome, p.preco, p.quantidade_estoque, p.vendedor_id, p.loja_id, p.descricao, p.imagem, p.categoria, l.nome AS loja_nome FROM produtos p JOIN lojas l ON p.loja_id = l.id ORDER BY categoria")
+		cursor.execute("""
+			SELECT p.id, p.nome, p.preco, p.quantidade_estoque, p.vendedor_id, p.loja_id, p.descricao, p.imagem, 
+			c.nome AS categoria_nome, l.nome AS loja_nome 
+			FROM produtos p
+			JOIN lojas l ON p.loja_id = l.id
+			JOIN categoria c ON p.categoria_id = c.id
+			ORDER BY c.nome
+		""")
 		produtos = cursor.fetchall()
 		produtos_por_categoria = {}
 		for produto in produtos:
-			categoria = produto['categoria']
+			print(produto)
+			categoria = produto.get('categoria_nome')
+			if categoria is None:
+				categoria = 'Sem Categoria'
 			if categoria not in produtos_por_categoria:
 				produtos_por_categoria[categoria] = []
+			produto['categoria'] = categoria
 			produtos_por_categoria[categoria].append(produto)
 	finally:
 		cursor.close()
@@ -614,6 +662,25 @@ def carrinho():
 	return render_template('carrinho.html', produtos=[], total=0)
 
 
+@app.route('/ver_detalhes/<int:produto_id>', methods=['GET'])
+def ver_detalhes(produto_id):
+	conn = mysql.connector.connect(**db_config)
+	cursor = conn.cursor()
+	
+	cursor.execute("""
+		SELECT p.id, p.nome, p.descricao, p.preco, p.quantidade_estoque, p.imagem, l.nome AS loja_nome
+		FROM produtos p
+		JOIN lojas l ON p.loja_id = l.id
+		WHERE p.id = %s
+	""", (produto_id,))
+	produto = cursor.fetchone()
+	cursor.close()
+	conn.close()
+
+	if produto is None:
+		return ("Produto não encontrado", 401)
+	return render_template('ver_detalhe.html', produto=produto)
+
 @app.route('/remover_produto_carrinho/<int:produto_id>', methods=['POST'])
 def remover_produto_carrinho(produto_id):
 	carrinho = session.get('carrinho', {})
@@ -639,7 +706,7 @@ def remover_produto_carrinho(produto_id):
 	return redirect(url_for('carrinho'))
 
 
-@app.route('/finalizar_compra')
+@app.route('/finalizar_compra', methods=['GET', 'POST'])
 def finalizar_compra():
 	if 'carrinho' in session and session['carrinho']:
 		carrinho_ids = session['carrinho']
@@ -660,35 +727,70 @@ def finalizar_compra():
 			total += produto[2] * quantidade
 
 		# Criar o pagamento no PayPal
-		payment = paypalrestsdk.Payment({
-			"intent": "sale",
-			"payer": {
-				"payment_method": "paypal"
-			},
-			"transactions": [{
-				"amount": {
-					"total": str(total),  # Total do carrinho
-					"currency": "USD"
-               			},
-				"description": "Compra no site"
-			}],
-			"redirect_urls": {
-				"return_url": url_for('pagamento_aprovado', _external=True),
-				"cancel_url": url_for('pagamento_cancelado', _external=True)
-			}
-		})
+		payment_method = request.form.get('payment_method')
+		if payment_method == 'paypal':
+			payment = paypalrestsdk.Payment({
+				"intent": "sale",
+				"payer": {
+					"payment_method": "paypal"
+				},
+				"transactions": [{
+					"amount": {
+						"total": str(total),  # Total do carrinho
+						"currency": "USD"
+               				},
+					"description": "Compra no site"
+				}],
+				"redirect_urls": {
+					"return_url": url_for('pagamento_aprovado', _external=True),
+					"cancel_url": url_for('pagamento_cancelado', _external=True)
+				}
+			})
+	
+			if payment.create():
+				print(f"Pagamento criado {payment}")
+				for link in payment.links:
+					payment = paypalrestsdk.Payment.find(payment.id)
+					if link.rel == "approval_url":
+						return redirect(link.href)
+			else:
+				return redirect(url_for('carrinho'))
+		elif payment_method == 'stripe':
+			print(f"Total calculado: {total}")
+			return redirect(url_for('pagamento_stripe', total=total))
+	print(f"Esse outro total: {total}")
+	return render_template('finalizar_compra.html', total=total)
 
-		if payment.create():
-			print(f"Pagamento criado {payment}")
-			for link in payment.links:
-				payment = paypalrestsdk.Payment.find(payment.id)
-				if link.rel == "approval_url":
-					return redirect(link.href)
-				"""else:
-					return f"Erro ao criar o pagamento no PayPal: {payment.error}", 500"""
-		else:
-			return redirect(url_for('carrinho'))
 
+@app.route('/stripe_pagamento_aprovado')
+def stripe_pagamento_aprovado():
+    session.pop('carrinho', None)
+    return "Pagamento via Stripe aprovado com sucesso!"
+
+@app.route('/pagamento_stripe', methods=['GET', 'POST'])
+def pagamento_stripe():
+	total = request.form.get('total') if request.method == 'POST' else request.args.get('total')
+	print(f"Total Recebido: {total}")
+	print(total)
+	if total is None:
+		return "Erro: Total não fornecido", 400
+	total = float(total)
+	stripe_public_key="sk_test_51QTOxKG8y4lkVkcj0VSZbqB0XnXRf8n8KTVN2ejV8h89eFVLN2n6DpqBcQGsxwVmAIZIXr8r7IyXT8ixgrQQVrhB003sgHXSHV"
+	if request.method == 'POST':
+		token = request.form['stripeToken']
+		try:
+			charge = stripe.Charge.create(
+				amount=int(float(total) * 100),  # Converte para centavos
+				currency='aoa',
+				description='Compra no site',
+				source=token
+			)
+			return redirect(url_for('stripe_pagamento_aprovado'))
+		except stripe.error.StripeError as e:
+			print(f"Error: {e}")
+			return str(e), 500
+	return render_template('stripe_payment.html', total=total, stripe_public_key=stripe_public_key)
+		 	
 
 @app.route('/pagamento_aprovado')
 def pagamento_aprovado():
@@ -824,6 +926,7 @@ def ver_loja(vendedor_id):
 				FROM lojas l
 				WHERE l.vendedor_id = %s
 		""", (vendedor_id, ))
+		print("Conectado")
 		loja = cursor.fetchone()
 		if not loja:
 			return "Loja não encontrada para o vendedor especificado.", 404

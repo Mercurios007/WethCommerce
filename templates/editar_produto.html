@@ -8,97 +8,108 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000000;
-            color: #FFFFFF;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
         }
+
         .container {
-            width: 60%;
-            margin: 50px auto;
-            background-color: #1a1a1a;
-            padding: 30px;
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 1s ease;
+            margin-top: 50px;
         }
+
         h1 {
             text-align: center;
-            color: #14CD37;
-            margin-bottom: 30px;
-            font-size: 2em;
+            color: #2c3e50;
         }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
         label {
-            font-size: 1.2em;
-            color: #CCCCCC;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
         }
-        input, select, textarea {
-            width: calc(100% - 50px);
-            padding: 12px;
-            margin: 10px 0 20px 0;
-            border-radius: 5px;
-            border: 1px solid #444;
-            background-color: #333;
-            color: #fff;
-            font-size: 1.1em;
-        }
+
+        input[type="text"],
+        textarea,
+        select,
         input[type="file"] {
-            display: none;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #ecf0f1;
+            color: #2c3e50;
         }
-        .file-input-button {
-            width: calc(100% - 50px);
-            padding: 12px;
-            margin: 10px 0 20px 0;
-            background-color: #006B3F;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 1.1em;
-        }
-        .file-input-button:hover {
-            background-color: #2E8B57;
-        }
+
         input[type="checkbox"] {
-            width: auto;
             margin-right: 10px;
         }
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            flex: 1;
-            margin: 0 10px;
-        }
-        .form-group input[type="text"], .form-group textarea, .form-group select {
-            flex: 3;
-        }
+
         button {
-            background-color: #14CD37;
+            background-color: #3498db;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
-            font-size: 1.2em;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
             width: 100%;
-            margin-top: 20px;
+            font-size: 16px;
         }
+
         button:hover {
-            background-color: #12b52f;
+            background-color: #2980b9;
         }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+
+        .file-input-button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .file-input-button:hover {
+            background-color: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            button {
+                padding: 12px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            input[type="text"],
+            textarea,
+            select,
+            input[type="file"] {
+                padding: 8px;
+            }
+
+            button {
+                padding: 15px 0;
             }
         }
     </style>
@@ -107,15 +118,17 @@
     <div class="container">
         <h1>Atualizar Produto</h1>
         <form method="POST" enctype="multipart/form-data">
+            <!-- Campo para selecionar o produto -->
             <div class="form-group">
                 <label for="nome_produto">Selecione o Produto:</label>
                 <select name="nome_produto" id="nome_produto">
                     {% for produto in produtos %}
-                    <option value="{{ produto[1] }}">{{ produto[1] }}</option>
+                        <option value="{{ produto[1] }}">{{ produto[1] }}</option> <!-- Nome do produto como valor -->
                     {% endfor %}
                 </select>
             </div>
 
+            <!-- Campos para edição -->
             <div class="form-group">
                 <input type="checkbox" id="editar_nome" name="editar_nome" value="1">
                 <label for="editar_nome">Editar Nome</label>
@@ -137,24 +150,37 @@
             <div class="form-group">
                 <input type="checkbox" id="editar_descricao" name="editar_descricao" value="1">
                 <label for="editar_descricao">Editar Descrição</label>
-                <textarea name="nova_descricao" id="nova_descricao"></textarea>
+                <textarea id="nova_descricao" name="nova_descricao" class="form-control formatted-description" placeholder="Digite a descrição do produto" maxlength="1000"></textarea>
             </div>
+
             <div class="form-group">
-                <input type="checkbox" id="editar_imagem" name="editar_categoria" value="1">
-                <label for="nova_categoria">Editar categoria:</label>
-                <select name="nova_categoria" id="nova_categoria">
-                    <option value="Moda e acessórios">Moda e acessórios</option>
-                    <option value="Tecnologia">Tecnologia</option>
-                    <option value="Beleza e cuidados pessoais">Beleza e cuidados pessoais</option>
-                    <option value="Saúde e Fitness">Saúde e Fitness</option>
-                    <option value="Casa e decoração">Casa e decoração</option>
+                <input type="checkbox" id="editar_categoria" name="editar_categoria" value="1">
+                <label for="editar_categoria">Editar Categoria:</label>
+                <select name="nova_categoria" id="nova_categoria" onchange="carregarSubcategorias()">
+                    <option value="Moda e Acessórios">Moda e Acessórios</option>
+                    <option value="Eletrônicos e Tecnologia">Eletrônicos e Tecnologia</option>
+                    <option value="Beleza e Cuidados Pessoais">Beleza e Cuidados Pessoais</option>
+                    <option value="Saúde e Bem-Estar">Saúde e Bem-Estar</option>
+                    <option value="Casa e Decoração">Casa e Decoração</option>
+                    <option value="Utensílios Domésticos">Utensílios Domésticos</option>
                     <option value="Alimentos e Bebidas">Alimentos e Bebidas</option>
-                    <option value="Livros, papelaria e presentes">Livros, papelaria e presentes</option>
-                    <option value="Bebês e crianças">Bebês e crianças</option>
+                    <option value="Livros e Materiais Educativos">Livros e Materiais Educativos</option>
+                    <option value="Arte e Artesanato">Arte e Artesanato</option>
+                    <option value="Infantil e Bebês">Infantil e Bebês</option>
                     <option value="Automotivo">Automotivo</option>
-                    <option value="Pets">Pets</option>
+                    <option value="Pet Shop">Pet Shop</option>
+                    <option value="Esportes e Lazer">Esportes e Lazer</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <input type="checkbox" id="editar_subcategoria" name="editar_subcategoria" value="1">
+                <label for="editar_subcategoria">Editar Subcategoria:</label>
+                <select name="nova_subcategoria" id="nova_subcategoria">
+                    <!-- Subcategorias serão carregadas dinamicamente aqui -->
+                </select>
+            </div>
+
             <div class="form-group">
                 <input type="checkbox" id="editar_imagem" name="editar_imagem" value="1">
                 <label for="editar_imagem">Editar Imagem</label>
@@ -165,5 +191,78 @@
             <button type="submit">Atualizar Produto</button>
         </form>
     </div>
+
+    <script>
+        function carregarSubcategorias() {
+            var categoriaSelecionada = document.getElementById("nova_categoria").value;
+            var subcategoriaSelect = document.getElementById("nova_subcategoria");
+
+            // Limpar as subcategorias existentes
+            subcategoriaSelect.innerHTML = '<option value="">Selecione uma subcategoria</option>';
+
+            // Lista de subcategorias por categoria
+            var subcategorias = {
+                "Moda e Acessórios": [
+                    "Roupas Femininas", "Roupas Masculinas", "Calçados", "Bolsas", "Mochilas", "Joias", "Bijuterias", "Relógios", "Óculos", "Roupas de Cama", "Acessórios de Moda", "Lingerie", "Roupas de Praia", "Sapatos de Couro", "Camisetas", "Jeans", "Blusas", "Vestidos", "Sapatos Casuais", "Outros"
+                ],
+                "Eletrônicos e Tecnologia": [
+                    "Smartphones", "Laptops", "Tablets", "Smart TVs", "Fones de Ouvido", "Drones", "Câmeras Digitais", "Impressoras", "Monitores", "Notebooks Gamer", "Câmeras de Segurança", "Computadores", "Roteadores", "Teclados e Mouses", "Processadores", "Placas de Vídeo", "Memórias RAM", "Cartões de Memória", "Smartwatches", "Games e Jogos","Outros"
+                ],
+                "Beleza e Cuidados Pessoais": [
+                    "Maquiagem", "Cabelos", "Cuidados com a Pele", "Perfumaria", "Higiene Pessoal", "Unhas", "Acessórios de Beleza", "Cuidados com o Corpo", "Aparelhos de Beleza", "Produtos Masculinos", "Produtos Femininos", "Depilação", "Cuidados Anti-Idade", "Outros"
+                ],
+                "Saúde e Bem-Estar": [
+                    "Suplementos Alimentares", "Vitaminas", "Produtos Naturais", "Equipamentos de Academia", "Aparelhos de Massagem", "Produtos para Saúde Mental", "Produtos para Saúde Bucal", "Outros"
+                ],
+                "Casa e Decoração": [
+                    "Móveis de Sala", "Móveis de Quarto", "Móveis de Cozinha", "Iluminação", "Tapetes", "Cortinas", "Cama, Mesa e Banho", "Quadros Decorativos", "Vasos e Plantas", "Móveis de Escritório", "Cadeiras e Poltronas", "Acessórios para Casa", "Luminárias", "Decoração de Parede", "Móveis para Jardim", "Almofadas e Travesseiros", "Estantes", "Espelhos Decorativos", "Cortinas e Persianas", "Eletrodomésticos","Outros"
+                ],
+                "Utensílios Domésticos": [
+                        "Talheres e Copos", "Pratos e Tigelas", "Panelas e Cubas", "Garrafas de Água", "Lancheiras e Térmicas", "Outros"
+                ],
+
+                "Alimentos e Bebidas": [
+                    "Alimentos Orgânicos", "Bebidas Alcoólicas", "Bebidas Não Alcoólicas", "Lanches", "Produtos de Padaria", "Produtos de Confeitaria", "Produtos de Churrasco", "Chocolates e doces", "Outros"
+                ],
+                "Livros e Materiais Educativos": [
+                    "Livros Didáticos", "Livros de Ficção", "Livros de Não Ficção", "Materiais de Estudo", "Revistas", "E-books", "Outros"
+                ],
+                "Arte e Artesanato": [
+                    "Materiais de Pintura", "Materiais de Escultura", "Materiais de Costura", "Materiais de Papelaria", "Kits de Artesanato", "Outros"
+                ],
+                "Infantil e Bebês": [
+                    "Roupas para Bebês", "Brinquedos", "Produtos de Higiene para Bebês", "Mobiliário Infantil", "Alimentação para Bebês", "Outros"
+                ],
+                "Automotivo": [
+                    "Peças de Carro", "Acessórios de Carro", "Produtos de Limpeza Automotiva", "Equipamentos de Segurança", "Outros"
+                ],
+                "Pet Shop": [
+                    "Alimentos para Animais", "Brinquedos para Animais", "Produtos de Higiene para Animais", "Acessórios para Animais", "Outros"
+                ],
+                "Esportes e Lazer": [
+                    "Equipamentos de Esporte", "Roupas Esportivas", "Calçados Esportivos", "Acessórios Esportivos", "Outros"
+                ]
+            };
+
+            var subcategoriasList = subcategorias[categoriaSelecionada] || [];
+            subcategoriasList.forEach(function(subcategoria) {
+                var option = document.createElement("option");
+                option.value = subcategoria;
+                option.text = subcategoria;
+                subcategoriaSelect.appendChild(option);
+            });
+        }
+
+        window.onload = function() {
+            // Definir "Moda e Acessórios" como a categoria selecionada
+            var categoriaSelect = document.getElementById("nova_categoria");
+            var categoriaModaAcessorios = Array.from(categoriaSelect.options).find(option => option.text === "Moda e Acessórios");
+
+            if (categoriaModaAcessorios) {
+                categoriaModaAcessorios.selected = true;
+                carregarSubcategorias(); // Chama a função para carregar as subcategorias
+            }
+        };
+    </script>
 </body>
 </html>

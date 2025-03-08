@@ -10,109 +10,124 @@
     <style>
         /* Estilo geral */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #DAE5E7;
+            color: #4a4a4a;
             margin: 0;
             padding: 0;
         }
 
         /* Barra de navegação */
         .navbar {
-            background-color: #28a745;
+            background-color: #003f5b;
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .navbar a {
             color: white;
             margin: 0 15px;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
+            font-size: 16px;
         }
 
         .navbar a:hover {
             text-decoration: underline;
         }
 
-        .cart-icon {
-            display: flex;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .cart-icon span {
-            margin-left: 5px;
-        }
-
-        /* Botão Carrinho */
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
+        #cartButton {
+            background-color: white;
+            color: #003f5b;
             font-size: 16px;
-            border: none;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border: 2px solid #003f5b;
+            border-radius: 25px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        button:hover {
-            background-color: #218838;
-            transform: scale(1.1);
+        #cartButton:hover {
+            background-color: #003f5b;
+            color: white;
         }
 
-        /* Efeito de clique no botão */
-        .add-to-cart-btn:active {
-            transform: scale(0.95);
-            animation: clickEffect 0.3s ease-out;
+        /* Barra de pesquisa e filtro */
+        .search-filter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            gap: 0;
         }
 
-        @keyframes clickEffect {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
+        .search-filter input[type="search"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px 0px 0px 5px;
+            border: 2px solid #003f5b;
+            outline: none;
+            width: 250px;
+        }
+
+        .search-filter button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 0px 5px 5px 0px;
+            border: 2px solid #003f5b;
+            background-color: #003f5b;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-filter button:hover {
+            background-color: #6c5ce7;
+        }
+
+        .search-filter select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 2px solid #003f5b;
+            outline: none;
+            margin-left: 10px;
         }
 
         /* Container de produtos */
         .container {
             padding: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
 
         h1 {
             text-align: center;
-            color: #28a745;
+            color: #003f5b;
+            margin-bottom: 20px;
         }
 
         h2 {
-            color: #28a745;
-            margin-bottom: 10px;
+            color: #003f5b;
+            margin-bottom: 15px;
         }
 
-        /* Estilos para categorias e produtos */
         .category-products {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
-            margin-bottom: 30px;
+            gap: 20px;
         }
 
         .product {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 280px;
-            margin: 10px;
             overflow: hidden;
             transition: transform 0.3s ease-in-out;
         }
@@ -123,72 +138,63 @@
 
         .product img {
             width: 100%;
-            height: 250px;
+            height: 200px;
             object-fit: cover;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .product img:hover {
-            transform: scale(1.1);
         }
 
         .product-info {
             padding: 15px;
+            text-align: center;
         }
 
         .product-name {
             font-size: 18px;
             font-weight: bold;
-            color: #333;
-        }
-
-        .product-description {
-            font-size: 14px;
-            color: #777;
-            margin: 10px 0;
+            color: #4a4a4a;
+            margin-bottom: 10px;
         }
 
         .product-price {
             font-size: 16px;
-            color: #28a745;
+            color: #003f5b;
             font-weight: bold;
-        }
-
-        .product-quantity {
-            font-size: 14px;
-            color: #888;
-        }
-
-        .product-store {
-            margin-top: 10px;
         }
 
         .product-store a {
-            color: #28a745;
+            color: #003f5b;
             text-decoration: none;
-            font-weight: bold;
+            font-size: 14px;
         }
 
         .product-store a:hover {
             text-decoration: underline;
         }
+        .product-details a {
+            color: #003f5b;
+            text-decoration: none;
+            font-size: 14px;
+        }
 
+        .product-details-container a:hover {
+            text-decoration: underline;
+        }
         .add-to-cart-btn {
-            background-color: #28a745;
+            background-color: #003f5b;
             color: white;
+            font-size: 16px;
             padding: 10px;
             border: none;
-            border-radius: 5px;
-            width: 100%;
+            border-radius: 25px;
             cursor: pointer;
+            margin-top: 10px;
             transition: background-color 0.3s;
         }
 
         .add-to-cart-btn:hover {
-            background-color: #218838;
+            background-color: #6c5ce7;
         }
 
-        /* Modal para o carrinho */
+        /* Modal do carrinho */
         .cart-modal {
             display: none;
             position: fixed;
@@ -199,7 +205,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 400px;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 15px;
             z-index: 1000;
         }
 
@@ -208,65 +214,64 @@
         }
 
         .cart-modal h3 {
-            margin-top: 0;
-            color: #28a745;
-        }
-
-        .cart-items {
-            margin-top: 10px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .cart-item {
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
+            color: #a29bfe;
         }
 
         .close-btn {
-            background: #28a745;
+            background: #003f5b;
             color: white;
             border: none;
             padding: 5px 10px;
-            border-radius: 5px;
+            border-radius: 15px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .close-btn:hover {
-            background: #218838;
+            background: #6c5ce7;
         }
 
-        /* Rodapé */
         footer {
-            background-color: #28a745;
+            background-color: #003f5b;
             color: white;
             text-align: center;
             padding: 15px;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
         }
-
     </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
 </head>
 <body>
     <!-- Barra de Navegação -->
     <div class="navbar">
         <div>
             <a href="#">Home</a>
-            <a href="#">Sobre</a>
+            <a href="#">Promoções</a>
             <a href="#">Produtos</a>
             <a href="#">Contato</a>
         </div>
-        <button type="button" onclick="window.location.href='/carrinho';" id="cartButton">
-            🛒 Carrinho
+        <button type="button" id="cartButton" onclick="window.location.href='/carrinho';">
+            <i class="ri-shopping-cart-2-line"></i> Carrinho
         </button>
+    </div>
+
+    <!-- Barra de pesquisa e filtro -->
+    <div class="search-filter">
+        <input type="search" id="searchInput" placeholder="Buscar produtos...">
+        <button onclick="realizarPesquisa()">
+            <i class="ri-search-line"></i>
+        </button>
+        <select id="categoryFilter">
+            <option value="">Filtrar por categoria</option>
+            <option value="eletronicos">Eletrônicos</option>
+            <option value="roupas">Roupas</option>
+            <option value="alimentos">Alimentos</option>
+            <option value="pet">Petshop</option>
+        </select>
     </div>
 
     <!-- Container de Produtos -->
     <div class="container">
-        <h1>Produtos Disponíveis</h1>
-
         {% for categoria, produtos in produtos_por_categoria.items() %}
             <h2>{{ categoria }}</h2>
             <div class="category-products">
@@ -277,9 +282,12 @@
                             alt="Imagem do produto {{ produto['nome'] }}">
                         <div class="product-info">
                             <div class="product-name">{{ produto['nome'] }}</div>
-                            <div class="product-description">{{ produto['descricao'] }}</div>
                             <div class="product-price">Preço:  {{ produto['preco'] }}</div>
-                            <div class="product-quantity">Quantidade em estoque: {{ produto['quantidade_estoque'] }}</div>
+                            <div class="product-details">
+                                <a href="{{ url_for('ver_detalhes', produto_id=produto['id']) }}" class="view-details-text">
+                                    Ver Detalhes
+                                </a>
+                            </div>
                             <div class="product-store">
                                 <a href="{{ url_for('loja_data', loja_id=produto['loja_id']) }}">Loja: {{ produto['loja_nome'] }}</a>
                             </div>
@@ -312,7 +320,6 @@
     </footer>
 
     <script>
-        // Função para adicionar produto ao carrinho via AJAX
         function adicionarAoCarrinho(produtoId) {
             fetch('/adicionar_ao_carrinho/' + produtoId, {
                 method: 'POST',
@@ -328,17 +335,21 @@
             });
         }
 
-        // Função para atualizar carrinho na interface
         function atualizarCarrinho(carrinho) {
-            // Atualizar o número de itens no carrinho ou exibir outra informação
             const cartButton = document.getElementById('cartButton');
             cartButton.textContent = '🛒 Carrinho';
         }
 
-        // Função para abrir ou fechar o modal do carrinho
         function toggleCartModal() {
             const cartModal = document.getElementById('cartModal');
             cartModal.classList.toggle('active');
+        }
+
+        function realizarPesquisa() {
+            let searchQuery = document.getElementById('searchInput').value;
+            let categoryFilter = document.getElementById('categoryFilter').value;
+
+            console.log('Pesquisando por: ', searchQuery, 'Categoria: ', categoryFilter);
         }
     </script>
 </body>

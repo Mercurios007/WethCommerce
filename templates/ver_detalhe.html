@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detalhes do Produto">
+    <meta name="author" content="Seu Nome">
+    <title>Detalhes do Produto</title>
+    <link rel="icon" href="static/icons/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #DAE5E7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Barra de navegação */
+        .navbar {
+            background-color: #003f5b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botão do carrinho */
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #003f5b;
+            transition: background-color 0.3s;
+        }
+
+        .cart-icon:hover {
+            background-color: #6c5ce7;
+        }
+
+        .cart-icon span {
+            margin-left: 5px;
+        }
+
+        /* Container de detalhes do produto */
+        .product-detail-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 40%;
+            padding-right: 20px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            width: 55%;
+        }
+
+        .product-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 22px;
+            color: #003f5b;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product-description {
+            font-size: 16px;
+            color: #555;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .product-buttons {
+            margin-top: 30px;
+        }
+
+        /* Botões */
+        .product-buttons button, .product-buttons a {
+            padding: 10px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: #003f5b;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .product-buttons button:hover, .product-buttons a:hover {
+            background-color: #6c5ce7;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: #003f5b;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de Navegação -->
+    <div class="navbar">
+        <div>
+            <a href="#">Home</a>
+            <a href="#">Sobre</a>
+            <a href="#">Produtos</a>
+            <a href="#">Contato</a>
+        </div>
+        <button class="cart-icon" type="button" onclick="window.location.href='/carrinho';">
+            🛒 Carrinho <span>0</span>
+        </button>
+    </div>
+
+    <!-- Detalhes do Produto -->
+    <div class="product-detail-container">
+        <!-- Imagem do Produto -->
+        <div class="product-image">
+            <img src="{{ url_for('static', filename='images/' + produto[5] if produto[5] else 'default.jpg') }}" alt="Imagem do produto {{ produto[1] }}">
+        </div>
+
+        <!-- Informações do Produto -->
+        <div class="product-info">
+            <div class="product-name">{{ produto[1] }}</div>
+            <div class="product-price">Preço: {{ produto[3] }}</div>
+            <div class="product-description">{{ produto[2] }}</div>
+            
+            <!-- Botões -->
+            <div class="product-buttons">
+                <a href="{{ url_for('home') }}">Voltar para a Loja</a>
+                <button type="button" onclick="adicionarAoCarrinho({{ produto[0] }})">Adicionar ao Carrinho</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2025 WethCommerce Shopping. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Função para adicionar produto ao carrinho via AJAX
+        function adicionarAoCarrinho(produtoId) {
+            fetch('/adicionar_ao_carrinho/' + produtoId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ produto_id: produtoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Produto adicionado ao carrinho!');
+            });
+        }
+    </script>
+</body>
+</html>

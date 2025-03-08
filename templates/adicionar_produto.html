@@ -92,6 +92,33 @@
             transform: scale(1.05);
         }
 
+        /* Estilo para a área de descrição do produto (textarea) */
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: #fff;
+            font-size: 1.1em;
+            resize: vertical; /* Permite redimensionar apenas na direção vertical */
+            transition: all 0.3s ease;
+        }
+
+        /* Efeito de foco para a área de descrição */
+        textarea:focus {
+            border-color: #14CD37; /* Bordas verdes ao focar */
+            outline: none; /* Remove o contorno padrão do navegador */
+            background-color: #444; /* Mudança de cor de fundo ao focar */
+        }
+
+        /* Adiciona animação para a transição */
+        textarea::placeholder {
+            color: #888; /* Cor suave para o texto do placeholder */
+            font-style: italic;
+        }
+
         /* Animação de fade in */
         @keyframes fadeIn {
             from {
@@ -104,13 +131,37 @@
             }
         }
 
-        /* Animação para as caixas de seleção ao passar o mouse */
-        .form-group input[type="checkbox"]:hover {
-            transform: scale(1.2);
-            transition: transform 0.2s ease;
+        /* Estilo do Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
         }
-        .form-group input[type="checkbox"]:checked + label {
-            color: #14CD37; /* Cor verde vibrante quando selecionado */
+        .modal-content {
+            background-color: #333;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            color: white;
+        }
+        .modal button {
+            background-color: #14CD37;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal button:hover {
+            background-color: #12b52f;
         }
     </style>
 </head>
@@ -132,23 +183,34 @@
             </div>
             <div class="form-group">
                 <label for="descricao">Descrição do Produto:</label>
-                <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Digite a descrição do produto" required>
+                <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Clique para adicionar a descrição" readonly onclick="openModal()">
             </div>
 
             <!-- Novo campo para selecionar a categoria -->
             <div class="form-group">
                 <label for="categoria">Categoria:</label>
-                <select id="categoria" name="categoria" class="form-control" required>
-                    <option value="Moda e acessorios">Moda e Acessórios</option>
-                    <option value="Tecnologia">Tecnologia</option>
-                    <option value="Beleza e cuidados pessoais">Beleza e Cuidados Pessoais</option>
-                    <option value="Saude e Fitness">Saúde e Fitness</option>
-                    <option value="Casa e decoracao">Casa e Decoração</option>
+                <select id="categoria" name="categoria" class="form-control" required onchange="carregarSubcategorias()">
+                    <option value="Moda e Acessórios">Moda e Acessórios</option>
+                    <option value="Eletrônicos e Tecnologia">Eletrônicos e Tecnologia</option>
+                    <option value="Beleza e Cuidados Pessoais">Beleza e Cuidados Pessoais</option>
+                    <option value="Saúde e Bem-Estar">Saúde e Bem-Estar</option>
+                    <option value="Casa e Decoração">Casa e Decoração</option>
+                    <option value="Utensílios Domésticos">Utensílios Domésticos</option>
                     <option value="Alimentos e Bebidas">Alimentos e Bebidas</option>
-                    <option value="Livros papelaria e presentes">Livros, Papelaria e Presentes</option>
-                    <option value="Bebes e criancas">Bebês e Crianças</option>
+                    <option value="Livros e Materiais Educativos">Livros e Materiais Educativos</option>
+                    <option value="Arte e Artesanato">Arte e Artesanato</option>
+                    <option value="Infantil e Bebês">Infantil e Bebês</option>
                     <option value="Automotivo">Automotivo</option>
-                    <option value="Pets">Pets</option>
+                    <option value="Pet Shop">Pet Shop</option>
+                    <option value="Esportes e Lazer">Esportes e Lazer</option>
+                </select>
+            </div>
+
+            <!-- Novo campo para selecionar a subcategoria -->
+            <div class="form-group">
+                <label for="subcategoria">Subcategoria:</label>
+                <select id="subcategoria" name="subcategoria" class="form-control" required>
+                    <option value="">Selecione uma subcategoria</option>
                 </select>
             </div>
 
@@ -161,5 +223,94 @@
             <button type="submit">Adicionar Produto</button>
         </form>
     </div>
+
+    <!-- Modal de Descrição -->
+    <div id="descricaoModal" class="modal">
+        <div class="modal-content">
+            <h2>Descrição do Produto</h2>
+            <textarea id="descricaoText" rows="6" class="form-control" placeholder="Digite a descrição do produto" maxlength="1000"></textarea>
+            <br>
+            <button onclick="saveDescription()">Salvar</button>
+            <button onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("descricaoModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("descricaoModal").style.display = "none";
+        }
+
+        function saveDescription() {
+            var descricao = document.getElementById("descricaoText").value;
+            document.getElementById("descricao").value = descricao;
+            closeModal();
+        }
+
+        // Função para carregar subcategorias com base na categoria selecionada
+        function carregarSubcategorias() {
+            var categoriaSelecionada = document.getElementById("categoria").value;
+            var subcategoriaSelect = document.getElementById("subcategoria");
+
+            // Limpar as subcategorias existentes
+            subcategoriaSelect.innerHTML = '<option value="">Selecione uma subcategoria</option>';
+
+            // Lista de subcategorias por categoria
+            var subcategorias = {
+                    "Eletrônicos e Tecnologia": [
+                        "Smartphones", "Laptops", "Tablets", "Smart TVs", "Fones de Ouvido", "Drones", "Câmeras Digitais", "Impressoras", "Monitores", "Notebooks Gamer", "Câmeras de Segurança", "Computadores", "Roteadores", "Teclados e Mouses", "Processadores", "Placas de Vídeo", "Memórias RAM", "Cartões de Memória", "Smartwatches", "Games e Jogos","Outros"
+                    ],
+                    "Moda e Acessórios": [
+                        "Roupas Femininas", "Roupas Masculinas", "Calçados", "Bolsas", "Mochilas", "Joias", "Bijuterias", "Relógios", "Óculos", "Roupas de Cama", "Acessórios de Moda", "Lingerie", "Roupas de Praia", "Sapatos de Couro", "Camisetas", "Jeans", "Blusas", "Vestidos", "Sapatos Casuais", "Chapéus e Gorros", "Outros"
+                    ],
+                    "Beleza e Cuidados Pessoais": [
+                        "Maquiagem", "Cabelos", "Cuidados com a Pele", "Perfumaria", "Higiene Pessoal", "Unhas", "Acessórios de Beleza", "Cuidados com o Corpo", "Aparelhos de Beleza", "Produtos Masculinos", "Produtos Femininos", "Depilação", "Cuidados Anti-Idade", "Outros"
+                    ],
+                    "Casa e Decoração": [
+                        "Móveis de Sala", "Móveis de Quarto", "Móveis de Cozinha", "Iluminação", "Tapetes", "Cortinas", "Cama, Mesa e Banho", "Quadros Decorativos", "Vasos e Plantas", "Móveis de Escritório", "Cadeiras e Poltronas", "Acessórios para Casa", "Luminárias", "Decoração de Parede", "Móveis para Jardim", "Almofadas e Travesseiros", "Estantes", "Espelhos Decorativos", "Cortinas e Persianas", "Eletrodomésticos", "Outros"
+                    ],
+                    "Utensílios Domésticos": [
+                        "Talheres e Copos", "Pratos e Tigelas", "Panelas e Cubas", "Garrafas de Água", "Lancheiras e Térmicas", "Outros"
+                    ],
+
+                    "Esportes e Lazer": [
+                        "Roupas Esportivas", "Tênis de Corrida", "Bicicletas", "Equipamentos de Academia", "Yoga e Pilates", "Esportes Aquáticos", "Camping", "Esportes de Raquete", "Skate e Patins", "Kitesurf", "Canoagem", "Corrida", "Basquete", "Futebol", "Vôlei", "Natação", "Golfe", "Boxe", "Artes Marciais", "Outros"
+                    ],
+                    "Saúde e Bem-Estar": [
+                        "Suplementos Alimentares", "Produtos de Massagem", "Cuidados com a Postura", "Óleos Essenciais", "Produtos Naturais", "Equipamentos Médicos", "Almofadas Terapêuticas", "Produtos Ortopédicos", "Filtros de Água", "Aparelhos de Pressão", "Termômetros", "Roupas Térmicas", "Escova de Dentes Elétrica", "Aparelhos de Medição", "Produtos para Imunidade", "Vitaminas e Minerais", "Cuidados com a Pele", "Produtos de Higiene Bucal", "Produtos para Sono", "Outros"
+                    ],
+                    "Livros e Materiais Educativos": [
+                        "Livros de Ficção", "Livros de Não Ficção", "Livros Infantis", "Livros de Autoajuda", "Livros de História", "Livros de Ciência", "Livros de Filosofia", "Livros de Literatura", "Livros de Tecnologia", "Livros de Arte", "Livros de Culinária", "Livros de Música", "Livros de Design", "Material Escolar", "Cadernos e Agendas", "Canetas e Lápis", "Mochilas Escolares", "Papelaria", "Livros Técnicos", "Outros"
+                    ],
+                    "Automotivo": [
+                        "Peças e Acessórios", "Carros", "Motos", "Caminhões", "Bicicletas", "Ferramentas Automotivas", "Óleos e Lubrificantes", "Acessórios para Carros", "Pneus e Rodas", "Baterias", "Sistemas de Som", "Ar Condicionado Automotivo", "Pintura Automotiva", "Câmeras de Segurança Automotiva", "Outros"
+                    ],
+                    "Alimentos e Bebidas": [
+                        "Alimentos", "Bebidas", "Doces", "Refeições Prontas", "Produtos Orgânicos", "Alimentos Gourmet", "Lanches", "Produtos Diet", "Produtos sem Glúten", "Produtos Sem Lactose", "Chocolates", "Cafés e Chás", "Temperos", "Conservas", "Cereais", "Produtos de Panificação", "Frutas", "Verduras", "Carnes","Chocolates e doces", "Outros"
+                    ],
+                    "Pet Shop": [
+                        "Rações", "Brinquedos para Pets", "Camas e Cestas", "Roupas para Pets", "Produtos de Higiene para Pets", "Acessórios para Pets", "Medicamentos para Pets", "Alimentos para Animais Exóticos", "Rações para Cães", "Rações para Gatos", "Produtos para Aquários", "Produtos para Roedores", "Produtos para Pássaros", "Produtos para Répteis", "Outros"
+                    ],
+                    "Infantil e Bebês": [
+                        "Roupas Infantis", "Brinquedos", "Cadeiras para Carro", "Produtos de Higiene", "Móveis Infantis", "Camas e Berços", "Alimentação Infantil", "Fraldas", "Carrinhos de Bebê", "Roupas de Bebê", "Sapatos Infantis", "Bolsas de Bebê", "Produtos para Gestantes", "Roupas para Recém-Nascidos", "Outros"
+                    ],
+                    "Arte e Artesanato": [
+                        "Pinturas e Quadros", "Esculturas", "Artesanato em Madeira", "Artesanato em Papel", "Artesanato em Metal", "Artesanato em Cerâmica", "Artesanato em Vidro", "Material para Pintura", "Ferramentas para Artesanato", "Tecidos e Fios", "Bijuterias Artesanais", "Decoração Artesanal", "Acessórios de Artesanato", "Outros"
+                    ]
+                }
+            // Adicionar subcategorias ao select
+            if (subcategorias[categoriaSelecionada]) {
+                subcategorias[categoriaSelecionada].forEach(function(subcategoria) {
+                    var option = document.createElement("option");
+                    option.value = subcategoria;
+                    option.textContent = subcategoria;
+                    subcategoriaSelect.appendChild(option);
+                });
+            }
+        }
+    </script>
 </body>
 </html>

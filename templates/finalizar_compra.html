@@ -1,0 +1,11 @@
+<!-- finalizar_compra.html -->
+<h2>Escolha o Método de Pagamento</h2>
+<form method="POST" action="{{ url_for('finalizar_compra') }}">
+    <label>
+        <input type="radio" name="payment_method" value="paypal" checked> PayPal
+    </label><br>
+    <label>
+        <input type="radio" name="payment_method" value="stripe"> Stripe
+    </label><br>
+    <button type="submit">Finalizar Compra</button>
+</form>
